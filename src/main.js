@@ -1,15 +1,10 @@
 const platforms = Array.from({ length: 99 }, () => ({}));
-const platformHeight = 4; // Height of platforms in vmin
-const platformWidth = platformHeight * 4; // Width based on platformHeight
+const platformHeight = 3; // Height of platforms in vmin
+const platformWidth = 14; // Width based on platformHeight
 const sheepSvg = `
   <svg xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 36 36"
-    style="width: 9vmin; height: 9vmin;"
   >
-    <path
-      fill="#fa3"
-      d="M12 4q8-1 8 6-2 7-8 7-2-1 1-2 3 0 3-5-1-3-6 1-3 2-4-1-1-4 6-6"
-    />
     <path
       fill="#eee"
       d="M36 21q0-11-15-11h-3q-2-3-8-3C6 7 0 13 0 18q1 6 8 5 0 5 3 7c0 1 2 6 4 6l3-3 8-1q0 4 2 4c2 0 4-5 5-7q3-2 3-8"
@@ -28,15 +23,12 @@ const sheepWrap = document.createElement('div');
 sheepWrap.innerHTML = sheepSvg;
 const sheep = sheepWrap.firstElementChild;
 document.body.append(sheepWrap);
-document.documentElement.style.height = '100%';
 b.style.margin = '0';
 b.style.minHeight = '100vh';
 b.style.width = '100vw';
 b.style.overflow = 'hidden';
 b.style.background = 'linear-gradient(0deg, #3a3 0.1%, #8DE .1%, #314)';
 b.style.backgroundSize = '100% 5000vmin';
-b.style.backgroundRepeat = 'no-repeat';
-b.style.backgroundPosition = 'bottom center';
 
 let sheepX = 50;
 const grassY = 6;
@@ -110,6 +102,8 @@ const setSheepPosition = () => {
 const renderSheep = () => {
   sheepWrap.style.transform = `translate(calc(${sheepX}vw - 50%),${cameraY - sheepY}vmin) scale(${sheepFacing},1)`;
   sheep.style.transform = `rotate(${sheepTilt * sheepFacing}deg)`;
+  sheep.style.width = '9vmin';
+  sheep.style.height = '9vmin';
 };
 
 const renderPlatforms = () => {
