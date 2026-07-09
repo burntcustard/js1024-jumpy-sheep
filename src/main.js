@@ -49,8 +49,6 @@ let sheepVY = jumpVelocity;
 let cameraY = 0;
 let sheepFacing = 1;
 let sheepTilt = 0;
-let backgroundY;
-const backgroundStep = 1;
 
 worldLayer.style.position = 'fixed';
 worldLayer.style.left = '0';
@@ -58,7 +56,6 @@ worldLayer.style.bottom = '0';
 worldLayer.style.width = '100%';
 worldLayer.style.height = '100%';
 worldLayer.style.pointerEvents = 'none';
-worldLayer.style.willChange = 'transform';
 
 grassStrip.style.position = 'absolute';
 grassStrip.style.left = '0';
@@ -72,7 +69,6 @@ sheepWrap.style.position = 'absolute';
 sheepWrap.style.left = '50%';
 sheepWrap.style.bottom = '0';
 sheepWrap.style.transformOrigin = 'center';
-sheepWrap.style.willChange = 'transform';
 sheep.style.transformOrigin = 'center';
 sheep.style.transition = 'transform .2s';
 sheep.style.width = '7svh';
@@ -134,15 +130,11 @@ const renderPlatforms = () => {
 };
 
 const renderBackground = () => {
-  const nextBackgroundY = Math.round(cameraY / backgroundStep) * backgroundStep;
-  if (nextBackgroundY !== backgroundY) {
-    backgroundY = nextBackgroundY;
-    const t = Math.min(1, backgroundY / 800);
-    const r = Math.round(141 - 92 * t);
-    const g = Math.round(221 - 201 * t);
-    const bl = Math.round(238 - 218 * t);
-    b.style.background = `rgb(${r},${g},${bl})`;
-  }
+  const t = Math.min(1, cameraY / 1600);
+  const r = 141 - 92 * t;
+  const g = 221 - 201 * t;
+  const l = 238 - 218 * t;
+  b.style.background = `rgb(${r} ${g} ${b})`;
 };
 
 const update = () => {
