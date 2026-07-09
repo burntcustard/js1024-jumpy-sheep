@@ -32,18 +32,18 @@ let js = readFileSync('src/main.js', 'utf8');
 // Some custom mangling of JS to assist / work around Terser
 js = js
   // Minify CSS template literals
-//   .replace(/`[^`]+`/g, tag => tag
+  .replace(/`[^`]+`/g, tag => tag
     // .replace(/`\s+/, '`')  // Remove newlines & spaces at start or string
     // .replace(/\n\s+/g, '') // Remove newlines & spaces within values
     // .replace(/:\s/g, ':')  // Remove spaces in between property & values
-    // .replace(/,\s/g, ',') // Remove space after commas
+    .replace(/,\s/g, ',') // Remove space after commas
     // .replace(/(%) ([\d$])/g, '$1$2') // Remove space between e.g. '100% 50%'
     // .replace(/\s\/\s/g, '/') // Remove spaces around `/` in hsl
     // .replace(/;\s+/g, ';') // Remove newlines & spaces after semicolons
     // .replace(/\)\s/g, ')') // Remove spaces after closing brackets
     // .replace(/;`/, '`') // Remove final semicolons
     // .replace(/\)\`/g, '`') // Remove closing brackets usually at the end of calc
-//   )
+  )
   // createElement('div') -> createElement`div`
 //   .replace(/createElement\('([^']+)'\)/g, 'createElement`$1`')
   // Shorten tubeIndex to a to avoid reassignment by terser.
@@ -70,8 +70,8 @@ const minifiedJs = await minifyJs(js, options);
 
 const code = minifiedJs.code
   // Global variables on window instead of var, let or const
-  // .replace('let t=', 't=')
-  // .replace('let t,', 't,')
+//   .replace('let t=', 't=')
+//   .replace('let t,', 't,')
 
   // Remove unnecessary parentheses around a little maps that doesn't need them.
   // Actually adds ~1B

@@ -24,9 +24,10 @@ const sheepSvg = `
 
 let gameStarted = false;
 
-const sheep = document.createElement('svg');
-sheep.innerHTML = sheepSvg;
-document.body.append(sheep);
+const sheepWrap = document.createElement('div');
+sheepWrap.innerHTML = sheepSvg;
+const sheep = sheepWrap.firstElementChild;
+document.body.append(sheepWrap);
 document.documentElement.style.height = '100%';
 b.style.margin = '0';
 b.style.minHeight = '100vh';
@@ -38,32 +39,39 @@ b.style.backgroundRepeat = 'no-repeat';
 b.style.backgroundPosition = 'bottom center';
 
 let sheepX = 50;
-let sheepY = 0;
+const grassY = 6;
+let sheepY = grassY;
 let heldKeys = '';
 const sheepSpeed = 1;
+const sheepRadius = 2;
 const gravity = .06;
 const jumpVelocity = 2.8;
-const sheepRadius = 4;
-const platformBaseY = 60;
 const platformSpacing = 60;
-const cameraFollowY = 70;
+const cameraDeadzoneTop = 70;
+const cameraDeadzoneBottom = 30;
 let sheepVY = jumpVelocity;
 let cameraY = 0;
+let sheepFacing = 1;
+let sheepTilt = 0;
 
-sheep.style.position = 'fixed';
-sheep.style.bottom = '4vmin';
-sheep.style.transform = `translate(50vw,0) translateX(${-sheepRadius}vmin)`;
+sheepWrap.style.position = 'fixed';
+sheepWrap.style.left = '0';
+sheepWrap.style.bottom = '0';
+sheepWrap.style.transformOrigin = 'center';
+sheep.style.transformOrigin = 'center';
+sheep.style.transition = 'transform .2s';
 
 platforms.forEach((platform, i) => {
   platform.x = 10 + Math.random() * (90 - platformWidth);
-  platform.y = platformBaseY + i * platformSpacing;
+  platform.y = (i + 1) * platformSpacing;
+  platform.top = platform.y + platformHeight;
   platform.el = document.createElement('div');
   platform.el.style.position = 'fixed';
   platform.el.style.left = `${platform.x}vw`;
   platform.el.style.bottom = `${platform.y}vmin`;
   platform.el.style.width = `${platformWidth}vmin`;
   platform.el.style.height = `${platformHeight}vmin`;
-  platform.el.style.background = '#3b2a1a';
+  platform.el.style.background = '#852';
   b.append(platform.el);
 });
 
@@ -71,42 +79,37 @@ onkeydown = e => heldKeys += e.key;
 onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
 
 const setSheepPosition = () => {
-  sheepX += sheepSpeed * (heldKeys.includes('wR') - heldKeys.includes('wL'));
+  const moveX = heldKeys.includes('wR') - heldKeys.includes('wL');
+  sheepX += sheepSpeed * moveX;
+  sheepTilt = moveX * 15;
+  if (moveX) sheepFacing = -moveX;
   sheepX = sheepX < 3 ? 3 : sheepX > 97 ? 97 : sheepX;
 
   const prevY = sheepY;
   sheepVY -= gravity;
-  sheepY += sheepVY;
+  const nextY = sheepY + sheepVY;
+  sheepY = nextY;
 
-  if (sheepVY < 0) {
-    const hitPlatform = platforms.find(platform => {
-      const centerDistX = Math.abs(sheepX - (platform.x + platformWidth / 2));
-      const maxCenterDistX = platformWidth / 2 + sheepRadius;
-      const prevBottom = prevY + sheepRadius;
-      const bottom = sheepY + sheepRadius;
-      const platformTop = platform.y + platformHeight;
-      return centerDistX < maxCenterDistX
-        && prevBottom >= platformTop
-        && bottom <= platformTop;
-    });
-
-    if (hitPlatform) {
-      sheepY = hitPlatform.y + platformHeight - sheepRadius;
-      sheepVY = jumpVelocity;
-      return;
-    }
-  }
-
-  if (sheepY <= 0) {
-    sheepY = 0;
+  if (sheepY <= grassY || platforms.some(platform => {
+    const overlapsX = sheepX > platform.x - sheepRadius
+      && sheepX < platform.x + platformWidth + sheepRadius;
+    return overlapsX && prevY >= platform.top && sheepY <= platform.top;
+  })) {
     sheepVY = jumpVelocity;
   }
 
-  cameraY = Math.max(0, sheepY - cameraFollowY);
+  const sheepScreenY = sheepY - cameraY;
+  if (sheepScreenY > cameraDeadzoneTop) {
+    cameraY += sheepScreenY - cameraDeadzoneTop;
+  } else if (sheepScreenY < cameraDeadzoneBottom) {
+    cameraY -= cameraDeadzoneBottom - sheepScreenY;
+  }
+  if (cameraY < 0) cameraY = 0;
 };
 
 const renderSheep = () => {
-  sheep.style.transform = `translate(${sheepX}vw,${cameraY - sheepY}vmin) translateX(${-sheepRadius}vmin)`;
+  sheepWrap.style.transform = `translate(calc(${sheepX}vw - 50%),${cameraY - sheepY}vmin) scale(${sheepFacing},1)`;
+  sheep.style.transform = `rotate(${sheepTilt * sheepFacing}deg)`;
 };
 
 const renderPlatforms = () => {
