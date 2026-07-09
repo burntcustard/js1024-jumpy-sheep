@@ -27,7 +27,7 @@ b.style.margin = '0';
 b.style.minHeight = '100vh';
 b.style.width = '100vw';
 b.style.overflow = 'hidden';
-b.style.background = 'linear-gradient(0deg, #3a3 0.1%, #8DE .1%, #314)';
+b.style.background = 'linear-gradient(0deg, #3a3 0 .1%, #8DE .1%, #314)';
 b.style.backgroundSize = '100% 5000vmin';
 
 let sheepX = 50;
