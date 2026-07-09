@@ -20,15 +20,18 @@ const sheepSvg = `
 
 let gameStarted = false;
 
+const worldLayer = document.createElement('div');
+document.body.append(worldLayer);
 const sheepWrap = document.createElement('div');
 sheepWrap.innerHTML = sheepSvg;
 const sheep = sheepWrap.firstElementChild;
-document.body.append(sheepWrap);
+worldLayer.append(sheepWrap);
+const grassStrip = document.createElement('div');
+worldLayer.append(grassStrip);
 b.style.margin = '0';
 b.style.minHeight = '100svh';
 b.style.overflow = 'hidden';
-b.style.background = 'linear-gradient(0deg, #3a3 3svh, #8DE 0, #314)';
-b.style.backgroundSize = '100% 5000svh';
+b.style.background = '#8de';
 
 const horizontalRange = 25;
 let sheepX = 0;
@@ -37,8 +40,8 @@ let sheepY = grassY;
 let heldKeys = '';
 const sheepSpeed = 1;
 const sheepRadius = 2;
-const gravity = .1;
-const jumpVelocity = 3;
+const gravity = .09;
+const jumpVelocity = 2.9;
 const platformSpacing = 40;
 const cameraDeadzoneTop = 60;
 const cameraDeadzoneBottom = 15;
@@ -46,13 +49,34 @@ let sheepVY = jumpVelocity;
 let cameraY = 0;
 let sheepFacing = 1;
 let sheepTilt = 0;
+let backgroundY;
+const backgroundStep = 1;
 
-sheepWrap.style.position = 'fixed';
+worldLayer.style.position = 'fixed';
+worldLayer.style.left = '0';
+worldLayer.style.bottom = '0';
+worldLayer.style.width = '100%';
+worldLayer.style.height = '100%';
+worldLayer.style.pointerEvents = 'none';
+worldLayer.style.willChange = 'transform';
+
+grassStrip.style.position = 'absolute';
+grassStrip.style.left = '0';
+grassStrip.style.bottom = '0';
+grassStrip.style.width = '100%';
+grassStrip.style.height = `${grassY}svh`;
+grassStrip.style.background = '#3a3';
+grassStrip.style.pointerEvents = 'none';
+
+sheepWrap.style.position = 'absolute';
 sheepWrap.style.left = '50%';
 sheepWrap.style.bottom = '0';
 sheepWrap.style.transformOrigin = 'center';
+sheepWrap.style.willChange = 'transform';
 sheep.style.transformOrigin = 'center';
 sheep.style.transition = 'transform .2s';
+sheep.style.width = '7svh';
+sheep.style.height = '7svh';
 
 platforms.forEach((platform, i) => {
   platform.width = platformStartWidth - (platformStartWidth - platformEndWidth) * i / (platforms.length - 1);
@@ -60,13 +84,13 @@ platforms.forEach((platform, i) => {
   platform.y = (i + 1) * platformSpacing;
   platform.top = platform.y + platformHeight;
   platform.el = document.createElement('div');
-  platform.el.style.position = 'fixed';
+  platform.el.style.position = 'absolute';
   platform.el.style.left = `calc(50% + ${platform.x - platform.width / 2}svh)`;
   platform.el.style.bottom = `${platform.y}svh`;
   platform.el.style.width = `${platform.width}svh`;
   platform.el.style.height = `${platformHeight}svh`;
   platform.el.style.background = '#852';
-  b.append(platform.el);
+  worldLayer.append(platform.el);
 });
 
 onkeydown = e => heldKeys += e.key;
@@ -101,20 +125,24 @@ const setSheepPosition = () => {
 };
 
 const renderSheep = () => {
-  sheepWrap.style.transform = `translate(calc(${sheepX}svh - 50%),${cameraY - sheepY}svh) scale(${sheepFacing},1)`;
+  sheepWrap.style.transform = `translate(calc(${sheepX}svh - 50%),${-sheepY}svh) scale(${sheepFacing},1)`;
   sheep.style.transform = `rotate(${sheepTilt * sheepFacing}deg)`;
-  sheep.style.width = '7svh';
-  sheep.style.height = '7svh';
 };
 
 const renderPlatforms = () => {
-  platforms.forEach(platform => {
-    platform.el.style.bottom = `${platform.y - cameraY}svh`;
-  });
+  worldLayer.style.transform = `translateY(${cameraY}svh)`;
 };
 
 const renderBackground = () => {
-  b.style.backgroundPosition = `center calc(100% + ${cameraY}svh)`;
+  const nextBackgroundY = Math.round(cameraY / backgroundStep) * backgroundStep;
+  if (nextBackgroundY !== backgroundY) {
+    backgroundY = nextBackgroundY;
+    const t = Math.min(1, backgroundY / 800);
+    const r = Math.round(141 - 92 * t);
+    const g = Math.round(221 - 201 * t);
+    const bl = Math.round(238 - 218 * t);
+    b.style.background = `rgb(${r},${g},${bl})`;
+  }
 };
 
 const update = () => {
