@@ -62,7 +62,7 @@ a.style.height = '100svh'
 
 // DEBUG SENSOR HUD (comment out this section later)
 const sensorHud = document.createElement('div');
-a.append(sensorHud);
+document.documentElement.append(sensorHud);
 sensorHud.style.position = 'fixed';
 sensorHud.style.left = '0';
 sensorHud.style.top = '0';
@@ -136,7 +136,9 @@ const onOrientation = e => {
   alpha = e.alpha;
   beta = e.beta;
   gamma = e.gamma;
-  tiltX = (gamma > 20) - (gamma < -20);
+  const g = gamma || 0;
+  const a = Math.abs(g);
+  tiltX = a < 10 ? 0 : Math.sign(g) * Math.min(1, (a - 10) / 10);
 };
 const onMotion = e => {
   accX = e.acceleration?.x;
