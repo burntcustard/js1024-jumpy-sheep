@@ -44,6 +44,8 @@ let sheepX = 0;
 const grassY = 4;
 let sheepY = grassY;
 let heldKeys = '';
+let tiltX = 0;
+let alpha, beta, gamma, accX, accY, accZ, gravX, gravY, gravZ, rotA, rotB, rotG, motionInterval;
 const gravity = .09;
 const jumpVelocity = 2.9;
 const cameraDeadzoneTop = 60;
@@ -51,11 +53,26 @@ const cameraDeadzoneBottom = 10;
 let sheepVY = jumpVelocity;
 let cameraY = 0;
 let sheepFacing = 1;
+const formatSensor = n => n == null ? '-' : n.toFixed(2);
 
 sheepWrap.innerHTML = sheepSvg;
 a.append(sheepWrap, grassStrip);
 a.style.margin = '0';
 a.style.height = '100svh'
+
+// DEBUG SENSOR HUD (comment out this section later)
+const sensorHud = document.createElement('div');
+a.append(sensorHud);
+sensorHud.style.position = 'fixed';
+sensorHud.style.left = '0';
+sensorHud.style.top = '0';
+sensorHud.style.zIndex = '9';
+sensorHud.style.whiteSpace = 'pre';
+sensorHud.style.font = '10px monospace';
+sensorHud.style.color = '#fff';
+sensorHud.style.background = '#0008';
+sensorHud.style.padding = '.3em';
+sensorHud.style.pointerEvents = 'none';
 
 grassStrip.style.position = 'absolute';
 grassStrip.style.inset = '0';
@@ -73,7 +90,7 @@ const update = () => {
   // Set sheep position
   // 'g' and 'L' appear in 'ArrowRight' and 'ArrowLeft'. We avoid 'R'
   // because that character does not appear in the rest of our code
-  const moveX = heldKeys.includes('g') - heldKeys.includes('L');
+  const moveX = tiltX || heldKeys.includes('g') - heldKeys.includes('L');
   sheepX += moveX;
   moveX && (sheepFacing = -moveX);
   sheepX = sheepX < -horizontalRange ? -horizontalRange : sheepX > horizontalRange ? horizontalRange : sheepX;
@@ -101,11 +118,39 @@ const update = () => {
   // Render background
   a.style.background = `color-mix(in hwb, #8de, #314 ${cameraY / 16}%)`;
 
+  sensorHud.textContent =
+`tiltX ${tiltX}
+alpha ${formatSensor(alpha)} beta ${formatSensor(beta)} gamma ${formatSensor(gamma)}
+acc ${formatSensor(accX)} ${formatSensor(accY)} ${formatSensor(accZ)}
+grav ${formatSensor(gravX)} ${formatSensor(gravY)} ${formatSensor(gravZ)}
+rot ${formatSensor(rotA)} ${formatSensor(rotB)} ${formatSensor(rotG)}
+dt ${formatSensor(motionInterval)}`;
+
   // Just under 60 updates per second
   setTimeout(update, 16);
 };
 
 onkeydown = e => heldKeys += e.key;
 onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
+const onOrientation = e => {
+  alpha = e.alpha;
+  beta = e.beta;
+  gamma = e.gamma;
+  tiltX = (gamma > 20) - (gamma < -20);
+};
+const onMotion = e => {
+  accX = e.acceleration?.x;
+  accY = e.acceleration?.y;
+  accZ = e.acceleration?.z;
+  gravX = e.accelerationIncludingGravity?.x;
+  gravY = e.accelerationIncludingGravity?.y;
+  gravZ = e.accelerationIncludingGravity?.z;
+  rotA = e.rotationRate?.alpha;
+  rotB = e.rotationRate?.beta;
+  rotG = e.rotationRate?.gamma;
+  motionInterval = e.interval;
+};
+ondeviceorientation = onOrientation;
+ondevicemotion = onMotion;
 
 update();
