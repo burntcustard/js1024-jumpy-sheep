@@ -105,7 +105,7 @@ const update = () => {
   // Render background
   a.style.background = `color-mix(in hwb, #8de, #314 ${cameraY / 16}%)`;
 
-  requestAnimationFrame(update);
+  setTimeout(update, 1000 / 60);
 };
 
 onkeydown = e => heldKeys += e.key;
