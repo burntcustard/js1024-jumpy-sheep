@@ -71,9 +71,9 @@ s.style.width = s.style.height = `${sheepSize}svh`;
 
 const update = () => {
   // Set sheep position
-  // 'gh' and 'L' appear in 'ArrowRight' and 'ArrowLeft'. We avoid 'R'
+  // 'g' and 'L' appear in 'ArrowRight' and 'ArrowLeft'. We avoid 'R'
   // because that character does not appear in the rest of our code
-  const moveX = heldKeys.includes('gh') - heldKeys.includes('L');
+  const moveX = heldKeys.includes('g') - heldKeys.includes('L');
   sheepX += moveX;
   moveX && (sheepFacing = -moveX);
   sheepX = sheepX < -horizontalRange ? -horizontalRange : sheepX > horizontalRange ? horizontalRange : sheepX;
