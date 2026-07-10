@@ -42,7 +42,6 @@ let sheepX = 0;
 const grassY = 4;
 let sheepY = grassY;
 let heldKeys = '';
-const sheepSpeed = 1;
 const gravity = .09;
 const jumpVelocity = 2.9;
 const cameraDeadzoneTop = 60;
@@ -50,7 +49,6 @@ const cameraDeadzoneBottom = 10;
 let sheepVY = jumpVelocity;
 let cameraY = 0;
 let sheepFacing = 1;
-let sheepTilt = 0;
 
 sheepWrap.innerHTML = sheepSvg;
 a.append(sheepWrap, grassStrip);
@@ -74,9 +72,8 @@ const update = () => {
   // 'gh' and 'L' appear in 'ArrowRight' and 'ArrowLeft'. We avoid 'R'
   // because that character does not appear in the rest of our code
   const moveX = heldKeys.includes('gh') - heldKeys.includes('L');
-  sheepX += sheepSpeed * moveX;
-  sheepTilt = moveX * 15;
-  if (moveX) sheepFacing = -moveX;
+  sheepX += moveX;
+  moveX && (sheepFacing = -moveX);
   sheepX = sheepX < -horizontalRange ? -horizontalRange : sheepX > horizontalRange ? horizontalRange : sheepX;
   sheepVY -= gravity;
   sheepY += sheepVY;
@@ -98,7 +95,7 @@ const update = () => {
 
   // Render sheep
   sheepWrap.style.transform = `translate(${sheepX - sheepSize / 2}svh, ${-sheepY}svh) scale(${sheepFacing},1)`;
-  s.style.transform = `rotate(${sheepTilt * sheepFacing}deg)`;
+  s.style.transform = `rotate(${15 * moveX * sheepFacing}deg)`;
 
   // Render platforms
   // Note that we always use two values for translate for consistency/compression
