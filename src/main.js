@@ -100,8 +100,7 @@ const update = () => {
 
   if (sheepY - cameraY > cameraDeadzoneTop) {
     cameraY = sheepY - cameraDeadzoneTop;
-  }
-  if (sheepY - cameraY < cameraDeadzoneBottom) {
+  } else if (sheepY - cameraY < cameraDeadzoneBottom) {
     cameraY = sheepY - cameraDeadzoneBottom;
   }
   if (cameraY < 0) cameraY = 0;
