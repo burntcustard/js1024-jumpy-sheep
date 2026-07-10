@@ -69,7 +69,7 @@ js = js
   // Replace tubeElement with 'd' *as well* (doesn't help?)
   // .replaceAll('tubeElement', 'd')
   // Replace const with let declaration
-//   .replaceAll('const ', 'let ')
+  .replaceAll('const ', 'let ')
   // Replace all .forEach with .map because they're the same but shorter in this codebase
   .replaceAll('.forEach(', '.map(')
   // Replace all strict equality comparison with abstract equality comparison

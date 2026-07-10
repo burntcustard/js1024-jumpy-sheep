@@ -21,7 +21,7 @@ const sheepSvg = `
 
 const worldLayer = document.createElement('div');
 a.append(worldLayer);
-const platforms = Array.from({ length: 99 }, (_, i) => {
+const platforms = [...Array(99)].map((_,i) => {
   const width = platformStartWidth - (platformStartWidth - platformEndWidth) * i / 98;
   const x = -horizontalRange + Math.random() * (horizontalRange * 2);
   const y = (i + 1) * platformSpacing;
@@ -34,7 +34,7 @@ const platforms = Array.from({ length: 99 }, (_, i) => {
   el.style.height = `${platformHeight}svh`;
   el.style.background = '#852';
   worldLayer.append(el);
-  return { width, x, y, top: y + platformHeight, el };
+  return { width, x, top: y + platformHeight };
 });
 const sheepWrap = document.createElement('div');
 sheepWrap.innerHTML = sheepSvg;
@@ -49,7 +49,7 @@ const grassY = 4;
 let sheepY = grassY;
 let heldKeys = '';
 const sheepSpeed = 1;
-const sheepHitboxRadius = 2;
+const sheepRadius = 2;
 const gravity = .09;
 const jumpVelocity = 2.9;
 const cameraDeadzoneTop = 60;
@@ -81,7 +81,8 @@ s.style.width = s.style.height = `${sheepSize}svh`;
 onkeydown = e => heldKeys += e.key;
 onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
 
-const setSheepPosition = () => {
+const update = () => {
+  // Set sheep position
   // 'gh' and 'L' appear in 'ArrowRight' and 'ArrowLeft'. We avoid 'R'
   // because that character does not appear in the rest of our code
   const moveX = heldKeys.includes('gh') - heldKeys.includes('L');
@@ -89,53 +90,39 @@ const setSheepPosition = () => {
   sheepTilt = moveX * 15;
   if (moveX) sheepFacing = -moveX;
   sheepX = sheepX < -horizontalRange ? -horizontalRange : sheepX > horizontalRange ? horizontalRange : sheepX;
-
-  const prevY = sheepY;
   sheepVY -= gravity;
-  const nextY = sheepY + sheepVY;
-  sheepY = nextY;
+  sheepY += sheepVY;
 
   // Bounce the sheep if its in a platform or the ground
   // Using bitwise OR to save a character but might not be worth it if more '||' added
-  if (sheepY <= grassY | platforms.some(platform => {
-    const overlapsX = Math.abs(sheepX - platform.x) < platform.width / 2 + sheepHitboxRadius;
-    return overlapsX && prevY >= platform.top && sheepY <= platform.top;
-  })) {
+  if (sheepY <= grassY | platforms.some(platform => Math.abs(sheepX - platform.x) < platform.width / 2 + sheepRadius
+      & sheepY - sheepVY >= platform.top & sheepY <= platform.top)) {
     sheepVY = jumpVelocity;
   }
 
-  const sheepScreenY = sheepY - cameraY;
-  if (sheepScreenY > cameraDeadzoneTop) {
-    cameraY += sheepScreenY - cameraDeadzoneTop;
-  } else if (sheepScreenY < cameraDeadzoneBottom) {
-    cameraY -= cameraDeadzoneBottom - sheepScreenY;
+  if (sheepY - cameraY > cameraDeadzoneTop) {
+    cameraY = sheepY - cameraDeadzoneTop;
+  }
+  if (sheepY - cameraY < cameraDeadzoneBottom) {
+    cameraY = sheepY - cameraDeadzoneBottom;
   }
   if (cameraY < 0) cameraY = 0;
-};
 
-const renderSheep = () => {
-  sheepWrap.style.transform = `translate(${sheepX - sheepSize / 2}svh,${-sheepY}svh) scale(${sheepFacing},1)`;
+  // Render sheep
+  sheepWrap.style.transform = `translate(${sheepX - sheepSize / 2}svh, ${-sheepY}svh) scale(${sheepFacing},1)`;
   s.style.transform = `rotate(${sheepTilt * sheepFacing}deg)`;
-};
 
-const renderPlatforms = () => {
+  // Render platforms
   // Note that we always use two values for translate for consistency/compression
-  worldLayer.style.transform = `translate(0,${cameraY}svh)`;
-};
+  worldLayer.style.transform = `translate(0, ${cameraY}svh)`;
 
-const renderBackground = () => {
+  // Render background
   const t = cameraY / 1600;
   const r = 141 - 92 * t;
   const g = 221 - 201 * t;
   const b = 238 - 218 * t;
   a.style.background = `rgb(${r} ${g} ${b})`;
-};
 
-const update = () => {
-  setSheepPosition();
-  renderSheep();
-  renderPlatforms();
-  renderBackground();
   requestAnimationFrame(update);
 };
 
