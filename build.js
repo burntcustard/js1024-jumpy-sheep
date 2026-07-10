@@ -37,15 +37,15 @@ js = js
     // .replace(/\n\s+/g, '') // Remove newlines & spaces within values
     // .replace(/:\s/g, ':')  // Remove spaces in between property & values
     .replace(/,\s/g, ',') // Remove space after commas
-    // .replace(/(%) ([\d$])/g, '$1$2') // Remove space between e.g. '100% 50%'
-    // .replace(/\s\/\s/g, '/') // Remove spaces around `/` in hsl
-    // .replace(/;\s+/g, ';') // Remove newlines & spaces after semicolons
-    // .replace(/\)\s/g, ')') // Remove spaces after closing brackets
-    // .replace(/;`/, '`') // Remove final semicolons
-    // .replace(/\)\`/g, '`') // Remove closing brackets usually at the end of calc
+    .replace(/(%) ([\d$])/g, '$1$2') // Remove space between e.g. '100% 50%'
+    .replace(/\s\/\s/g, '/') // Remove spaces around `/` in hsl
+    .replace(/;\s+/g, ';') // Remove newlines & spaces after semicolons
+    .replace(/\)\s/g, ')') // Remove spaces after closing brackets
+    .replace(/;`/, '`') // Remove final semicolons
+    .replace(/\)\`/g, '`') // Remove closing brackets usually at the end of calc
   )
   // createElement('div') -> createElement`div`
-//   .replace(/createElement\('([^']+)'\)/g, 'createElement`$1`')
+  .replace(/createElement\('([^']+)'\)/g, 'createElement`$1`')
   // Shorten tubeIndex to a to avoid reassignment by terser.
   // RegPack also doesn't reassign 'a','b','c' by default.
 //   .replaceAll('tubeObject', 'a')
@@ -58,7 +58,7 @@ js = js
   // .replaceAll('timerElement', 'd')
   // Replace tubeElement with 'd' *as well* (doesn't help?)
   // .replaceAll('tubeElement', 'd')
-  // Replace const with let declartion
+  // Replace const with let declaration
 //   .replaceAll('const ', 'let ')
   // Replace all .forEach with .map because they're the same but shorter in this codebase
   .replaceAll('.forEach(', '.map(')
@@ -99,7 +99,7 @@ const packed = cmdRegPack(code, {
   // withMath: true, // Sometimes worth wrapping with Math()
   varsNotReassigned : [
     'a',
-    'b',
+    // 'b', // used in rgb()
     'c',
     // 'd',
     // 'e',

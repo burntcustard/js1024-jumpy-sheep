@@ -4,7 +4,7 @@ const platformStartWidth = 14;
 const platformEndWidth = 4;
 const sheepSvg = `
   <svg xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 36 36"
+    viewbox="0 0 36 36"
   >
     <path
       fill="#eee"
@@ -18,20 +18,17 @@ const sheepSvg = `
   </svg>
 `;
 
-let gameStarted = false;
-
 const worldLayer = document.createElement('div');
-document.body.append(worldLayer);
+a.append(worldLayer);
 const sheepWrap = document.createElement('div');
 sheepWrap.innerHTML = sheepSvg;
 const sheep = sheepWrap.firstElementChild;
 worldLayer.append(sheepWrap);
 const grassStrip = document.createElement('div');
 worldLayer.append(grassStrip);
-b.style.margin = '0';
-b.style.minHeight = '100svh';
-b.style.overflow = 'hidden';
-b.style.background = '#8de';
+a.style.margin = '0';
+a.style.minHeight = '100svh';
+a.style.overflow = 'hidden';
 
 const horizontalRange = 25;
 let sheepX = 0;
@@ -55,7 +52,6 @@ worldLayer.style.left = '0';
 worldLayer.style.bottom = '0';
 worldLayer.style.width = '100%';
 worldLayer.style.height = '100%';
-worldLayer.style.pointerEvents = 'none';
 
 grassStrip.style.position = 'absolute';
 grassStrip.style.left = '0';
@@ -63,16 +59,12 @@ grassStrip.style.bottom = '0';
 grassStrip.style.width = '100%';
 grassStrip.style.height = `${grassY}svh`;
 grassStrip.style.background = '#3a3';
-grassStrip.style.pointerEvents = 'none';
 
 sheepWrap.style.position = 'absolute';
 sheepWrap.style.left = '50%';
 sheepWrap.style.bottom = '0';
-sheepWrap.style.transformOrigin = 'center';
-sheep.style.transformOrigin = 'center';
 sheep.style.transition = 'transform .2s';
-sheep.style.width = '7svh';
-sheep.style.height = '7svh';
+sheep.style.width = sheep.style.height = '7svh';
 
 platforms.forEach((platform, i) => {
   platform.width = platformStartWidth - (platformStartWidth - platformEndWidth) * i / (platforms.length - 1);
@@ -104,6 +96,7 @@ const setSheepPosition = () => {
   const nextY = sheepY + sheepVY;
   sheepY = nextY;
 
+  // Bounce the sheep if its in a platform or the ground
   if (sheepY <= grassY || platforms.some(platform => {
     const overlapsX = Math.abs(sheepX - platform.x) < platform.width / 2 + sheepRadius;
     return overlapsX && prevY >= platform.top && sheepY <= platform.top;
@@ -126,15 +119,16 @@ const renderSheep = () => {
 };
 
 const renderPlatforms = () => {
-  worldLayer.style.transform = `translateY(${cameraY}svh)`;
+  // Note that we always use two values for translate for consistency/compression
+  worldLayer.style.transform = `translate(0,${cameraY}svh)`;
 };
 
 const renderBackground = () => {
   const t = Math.min(1, cameraY / 1600);
   const r = 141 - 92 * t;
   const g = 221 - 201 * t;
-  const l = 238 - 218 * t;
-  b.style.background = `rgb(${r} ${g} ${b})`;
+  const b = 238 - 218 * t;
+  a.style.background = `rgb(${r} ${g} ${b})`;
 };
 
 const update = () => {
