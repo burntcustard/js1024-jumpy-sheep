@@ -43,6 +43,8 @@ js = js
       .replace(/\s+([a-zA-Z_:][-a-zA-Z0-9_:.]*)=/g, ' $1=')
       // Drop quotes only when the value is safely unquoted in HTML/SVG parsing
       .replace(/\s([a-zA-Z_:][-a-zA-Z0-9_:.]*)=["']([#a-zA-Z0-9.,_:-]+)["']/g, ' $1=$2')
+      // Prevent '/>' from being consumed as part of the final unquoted attribute value.
+      .replace(/=([#a-zA-Z0-9.,_:-]+)\/>/g, '=$1 />')
       .trim()}\``)
   // Minify CSS template literals
   .replace(/`[^`]+`/g, tag => tag
