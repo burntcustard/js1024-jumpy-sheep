@@ -92,7 +92,7 @@ const update = () => {
   // because that character does not appear in the rest of our code
   const moveX = tiltX || heldKeys.includes('g') - heldKeys.includes('L');
   sheepX += moveX;
-  moveX && (sheepFacing = -moveX);
+  moveX && (sheepFacing = -Math.sign(moveX));
   sheepX = sheepX < -horizontalRange ? -horizontalRange : sheepX > horizontalRange ? horizontalRange : sheepX;
   sheepVY -= gravity;
   sheepY += sheepVY;
@@ -138,7 +138,7 @@ const onOrientation = e => {
   gamma = e.gamma;
   const g = gamma || 0;
   const a = Math.abs(g);
-  tiltX = a < 10 ? 0 : Math.sign(g) * Math.min(1, (a - 10) / 10);
+  tiltX = a < 5 ? 0 : Math.sign(g) * Math.min(1, (a - 5) / 10);
 };
 const onMotion = e => {
   accX = e.acceleration?.x;
