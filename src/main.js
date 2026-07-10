@@ -65,7 +65,7 @@ grassStrip.style.background = '#3a3';
 sheepWrap.style.position = 'absolute';
 sheepWrap.style.left = '50%';
 sheepWrap.style.bottom = '0';
-s.style.transition = 'transform .2s';
+s.style.transition = 'rotate .2s';
 s.style.width = s.style.height = `${sheepSize}svh`;
 
 const update = () => {
@@ -96,7 +96,7 @@ const update = () => {
 
   // Render sheep
   sheepWrap.style.transform = `translate(${sheepX - sheepSize / 2}svh, ${-sheepY}svh) scale(${sheepFacing},1)`;
-  s.style.transform = `rotate(${15 * moveX * sheepFacing}deg)`;
+  s.style.rotate = `${15 * moveX * sheepFacing}deg`;
 
   // Render platforms
   // Note that we always use two values for translate for consistency/compression
