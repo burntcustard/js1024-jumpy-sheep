@@ -105,7 +105,8 @@ const update = () => {
   // Render background
   a.style.background = `color-mix(in hwb, #8de, #314 ${cameraY / 16}%)`;
 
-  setTimeout(update, 1000 / 60);
+  // Just under 60 updates per second
+  setTimeout(update, 16);
 };
 
 onkeydown = e => heldKeys += e.key;
