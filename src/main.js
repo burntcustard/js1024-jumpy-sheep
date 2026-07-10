@@ -55,21 +55,16 @@ let sheepTilt = 0;
 
 a.append(worldLayer);
 sheepWrap.innerHTML = sheepSvg;
-worldLayer.append(sheepWrap);
-worldLayer.append(grassStrip);
+worldLayer.append(sheepWrap, grassStrip);
 a.style.margin = '0';
 a.style.height = '100svh';
 
 worldLayer.style.position = 'fixed';
-worldLayer.style.left = '0';
-worldLayer.style.bottom = '0';
-worldLayer.style.width = '100%';
-worldLayer.style.height = '100%';
+worldLayer.style.inset = '0';
 
 grassStrip.style.position = 'absolute';
-grassStrip.style.left = '0';
-grassStrip.style.bottom = '0';
-grassStrip.style.width = '100%';
+grassStrip.style.inset = '0';
+grassStrip.style.top = '';
 grassStrip.style.height = `${grassY}svh`;
 grassStrip.style.background = '#3a3';
 
