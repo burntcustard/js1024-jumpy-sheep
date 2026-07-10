@@ -20,6 +20,7 @@ const sheepSvg = `
 `;
 
 const worldLayer = document.createElement('div');
+// Platform tuple: [x, hitX, top] where hitX = width/2 + sheep radius
 const platforms = [...Array(99)].map((_,i) => {
   const width = platformStartWidth - (platformStartWidth - platformEndWidth) * i / 98;
   const x = -horizontalRange + Math.random() * (horizontalRange * 2);
@@ -33,7 +34,7 @@ const platforms = [...Array(99)].map((_,i) => {
   el.style.height = `${platformHeight}svh`;
   el.style.background = '#852';
   worldLayer.append(el);
-  return { width, x, top: y + platformHeight };
+  return [x, width / 2 + 2, y + platformHeight];
 });
 const sheepWrap = document.createElement('div');
 const grassStrip = document.createElement('div');
@@ -43,7 +44,6 @@ const grassY = 4;
 let sheepY = grassY;
 let heldKeys = '';
 const sheepSpeed = 1;
-const sheepRadius = 2;
 const gravity = .09;
 const jumpVelocity = 2.9;
 const cameraDeadzoneTop = 60;
@@ -93,8 +93,9 @@ const update = () => {
 
   // Bounce the sheep if its in a platform or the ground
   // Using bitwise OR to save a character but might not be worth it if more '||' added
-  if (sheepY <= grassY | platforms.some(platform => Math.abs(sheepX - platform.x) < platform.width / 2 + sheepRadius
-      & sheepY - sheepVY >= platform.top & sheepY <= platform.top)) {
+  // Tuple indexes: [0]=x, [1]=hitX, [2]=top
+  if (sheepY <= grassY | platforms.some(platform => Math.abs(sheepX - platform[0]) < platform[1]
+      & sheepY - sheepVY >= platform[2] & sheepY <= platform[2])) {
     sheepVY = jumpVelocity;
   }
 
