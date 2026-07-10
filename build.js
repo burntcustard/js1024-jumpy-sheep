@@ -35,8 +35,6 @@ js = js
   // Minify inline SVG literals
   .replace(/([`'"])(\s*<svg[\s\S]*?<\/svg>\s*)\1/g, (full, quote, rawSvg) => `\`${rawSvg
       .replace(/<!--([\s\S]*?)-->/g, '')
-      // Allow unquoted viewbox by converting spaces to commas: 0 0 36 36 -> 0,0,36,36
-      .replace(/\bviewbox\s*=\s*(["'])\s*([\d.-]+)\s+([\d.-]+)\s+([\d.-]+)\s+([\d.-]+)\s*\1/gi, ' viewbox=$2,$3,$4,$5')
       .replace(/>\s+</g, '><')
       .replace(/\s{2,}/g, ' ')
       .replace(/\s*=\s*/g, '=')
