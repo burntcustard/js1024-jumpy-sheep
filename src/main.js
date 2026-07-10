@@ -3,9 +3,7 @@ const platformHeight = 2; // Height of platforms in svh
 const platformStartWidth = 14;
 const platformEndWidth = 4;
 const sheepSvg = `
-  <svg xmlns="http://www.w3.org/2000/svg"
-    viewbox="0 0 36 36"
-  >
+  <svg viewbox="0 0 36 36">
     <path
       fill="#eee"
       d="M36 21q0-11-15-11h-3q-2-3-8-3C6 7 0 13 0 18q1 6 8 5 0 5 3 7c0 1 2 6 4 6l3-3 8-1q0 4 2 4c2 0 4-5 5-7q3-2 3-8"
@@ -22,13 +20,12 @@ const worldLayer = document.createElement('div');
 a.append(worldLayer);
 const sheepWrap = document.createElement('div');
 sheepWrap.innerHTML = sheepSvg;
-const sheep = sheepWrap.firstElementChild;
+const sheep = sheepWrap.children[0];
 worldLayer.append(sheepWrap);
 const grassStrip = document.createElement('div');
 worldLayer.append(grassStrip);
 a.style.margin = '0';
-a.style.minHeight = '100svh';
-a.style.overflow = 'hidden';
+a.style.height = '100svh';
 
 const horizontalRange = 25;
 let sheepX = 0;
@@ -85,7 +82,8 @@ onkeydown = e => heldKeys += e.key;
 onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
 
 const setSheepPosition = () => {
-  const moveX = heldKeys.includes('wR') - heldKeys.includes('wL');
+  // 'R' and 'L' appear in 'ArrowRight' and 'ArrowLeft'
+  const moveX = heldKeys.includes('R') - heldKeys.includes('L');
   sheepX += sheepSpeed * moveX;
   sheepTilt = moveX * 15;
   if (moveX) sheepFacing = -moveX;
@@ -124,7 +122,7 @@ const renderPlatforms = () => {
 };
 
 const renderBackground = () => {
-  const t = Math.min(1, cameraY / 1600);
+  const t = cameraY / 1600;
   const r = 141 - 92 * t;
   const g = 221 - 201 * t;
   const b = 238 - 218 * t;

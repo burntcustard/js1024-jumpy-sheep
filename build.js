@@ -31,11 +31,21 @@ let js = readFileSync('src/main.js', 'utf8');
 
 // Some custom mangling of JS to assist / work around Terser
 js = js
+  // Minify inline SVG literals
+  .replace(/const sheepSvg\s*=\s*`([\s\S]*?)`;/, (full, rawSvg) => `const sheepSvg = \`${rawSvg
+      .replace(/<!--([\s\S]*?)-->/g, '')
+      .replace(/>\s+</g, '><')
+      .replace(/\s{2,}/g, ' ')
+      .replace(/\s*=\s*/g, '=')
+      .replace(/\s+\/>/g, '/>')
+      .replace(/\s+>/g, '>')
+      .replace(/\s+([a-zA-Z_:][-a-zA-Z0-9_:.]*)=/g, ' $1=')
+      .trim()}\`;`)
   // Minify CSS template literals
   .replace(/`[^`]+`/g, tag => tag
-    // .replace(/`\s+/, '`')  // Remove newlines & spaces at start or string
-    // .replace(/\n\s+/g, '') // Remove newlines & spaces within values
-    // .replace(/:\s/g, ':')  // Remove spaces in between property & values
+    .replace(/`\s+/, '`')  // Remove newlines & spaces at start or string
+    // .replace(/\n\s+/g, ' ') // Shrink newlines & spaces within values
+    .replace(/:\s/g, ':')  // Remove spaces in between property & values`
     .replace(/,\s/g, ',') // Remove space after commas
     .replace(/(%) ([\d$])/g, '$1$2') // Remove space between e.g. '100% 50%'
     .replace(/\s\/\s/g, '/') // Remove spaces around `/` in hsl
