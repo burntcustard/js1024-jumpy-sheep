@@ -20,7 +20,6 @@ const sheepSvg = `
 `;
 
 const worldLayer = document.createElement('div');
-a.append(worldLayer);
 const platforms = [...Array(99)].map((_,i) => {
   const width = platformStartWidth - (platformStartWidth - platformEndWidth) * i / 98;
   const x = -horizontalRange + Math.random() * (horizontalRange * 2);
@@ -37,12 +36,7 @@ const platforms = [...Array(99)].map((_,i) => {
   return { width, x, top: y + platformHeight };
 });
 const sheepWrap = document.createElement('div');
-sheepWrap.innerHTML = sheepSvg;
-worldLayer.append(sheepWrap);
 const grassStrip = document.createElement('div');
-worldLayer.append(grassStrip);
-a.style.margin = '0';
-a.style.height = '100svh';
 
 let sheepX = 0;
 const grassY = 4;
@@ -58,6 +52,13 @@ let sheepVY = jumpVelocity;
 let cameraY = 0;
 let sheepFacing = 1;
 let sheepTilt = 0;
+
+a.append(worldLayer);
+sheepWrap.innerHTML = sheepSvg;
+worldLayer.append(sheepWrap);
+worldLayer.append(grassStrip);
+a.style.margin = '0';
+a.style.height = '100svh';
 
 worldLayer.style.position = 'fixed';
 worldLayer.style.left = '0';
@@ -77,9 +78,6 @@ sheepWrap.style.left = '50%';
 sheepWrap.style.bottom = '0';
 s.style.transition = 'transform .2s';
 s.style.width = s.style.height = `${sheepSize}svh`;
-
-onkeydown = e => heldKeys += e.key;
-onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
 
 const update = () => {
   // Set sheep position
@@ -125,5 +123,8 @@ const update = () => {
 
   requestAnimationFrame(update);
 };
+
+onkeydown = e => heldKeys += e.key;
+onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
 
 update();

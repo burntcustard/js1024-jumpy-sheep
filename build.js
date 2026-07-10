@@ -80,8 +80,8 @@ const minifiedJs = await minifyJs(js, options);
 
 const code = minifiedJs.code
   // Global variables on window instead of var, let or const
-//   .replace('let t=', 't=')
-//   .replace('let t,', 't,')
+  .replace('let t=', 't=')
+  .replace('let t,', 't,')
 
   // Remove unnecessary parentheses around a little maps that doesn't need them.
   // Actually adds ~1B
