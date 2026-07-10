@@ -20,21 +20,22 @@ const sheepSvg = `
 `;
 
 // Platform tuple: [x, hitX, top] where hitX = width/2 + sheep radius
-const platforms = [...Array(99)].map((_,i) => {
-  const width = platformStartWidth - (platformStartWidth - platformEndWidth) * i / 98;
-  const x = -horizontalRange + Math.random() * (horizontalRange * 2);
-  const y = (i + 1) * platformSpacing;
-  const el = document.createElement('div');
-  el.style.position = 'absolute';
-  el.style.left = '50%';
-  el.style.transform = `translate(${x - width / 2}svh, 0)`;
-  el.style.bottom = `${y}svh`;
-  el.style.width = `${width}svh`;
-  el.style.height = `${platformHeight}svh`;
-  el.style.background = '#852';
-  a.append(el);
-  return [x, width / 2 + 2, y + platformHeight];
-});
+let width, x, y, el;
+const platforms = [...Array(99)].map((_,i) => (
+  width = platformStartWidth - (platformStartWidth - platformEndWidth) * i / 98,
+  x = -horizontalRange + Math.random() * (horizontalRange * 2),
+  y = (i + 1) * platformSpacing,
+  el = document.createElement('div'),
+  el.style.position = 'absolute',
+  el.style.left = '50%',
+  el.style.transform = `translate(${x - width / 2}svh, 0)`,
+  el.style.bottom = `${y}svh`,
+  el.style.width = `${width}svh`,
+  el.style.height = `${platformHeight}svh`,
+  el.style.background = '#a72',
+  a.append(el),
+  [x, width / 2 + 2, y + platformHeight]
+));
 const sheepWrap = document.createElement('div');
 const grassStrip = document.createElement('div');
 
@@ -53,7 +54,7 @@ let sheepFacing = 1;
 sheepWrap.innerHTML = sheepSvg;
 a.append(sheepWrap, grassStrip);
 a.style.margin = '0';
-a.style.height = '100svh';
+a.style.height = '100svh'
 
 grassStrip.style.position = 'absolute';
 grassStrip.style.inset = '0';
@@ -102,11 +103,7 @@ const update = () => {
   a.style.transform = `translate(0, ${cameraY}svh)`;
 
   // Render background
-  const t = cameraY / 1600;
-  const r = 141 - 92 * t;
-  const g = 221 - 201 * t;
-  const b = 238 - 218 * t;
-  a.style.background = `rgb(${r} ${g} ${b})`;
+  a.style.background = `color-mix(in hwb, #8de, #314 ${cameraY / 16}%)`;
 
   requestAnimationFrame(update);
 };

@@ -80,8 +80,8 @@ const minifiedJs = await minifyJs(js, options);
 
 const code = minifiedJs.code
   // Global variables on window instead of var, let or const
-  .replace('let t=', 't=')
-  .replace('let t,', 't,')
+  // .replace('let t=', 't=')
+  // .replace('let t,', 't,')
 
   // Remove unnecessary parentheses around a little maps that doesn't need them.
   // Actually adds ~1B
@@ -124,12 +124,12 @@ const html = readFileSync('src/index.html', 'utf8');
 
 const inlined = html.replace(
   /<script[^>]*><\/script>/,
-  `<script>${packed}</script>`,
+  () => `<script>${packed}</script>`,
 );
 
 const inlinedNonPacked = html.replace(
   /<script[^>]*><\/script>/,
-  `<script>${code}</script>`,
+  () => `<script>${code}</script>`,
 );
 
 const minifiedInlined = minifyHtml(inlined, {
