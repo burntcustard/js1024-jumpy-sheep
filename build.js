@@ -24,6 +24,7 @@ const options = {
   },
   format: {
     wrap_func_args: false,
+    quote_style: 1,
   },
 };
 
@@ -32,15 +33,19 @@ let js = readFileSync('src/main.js', 'utf8');
 // Some custom mangling of JS to assist / work around Terser
 js = js
   // Minify inline SVG literals
-  .replace(/const sheepSvg\s*=\s*`([\s\S]*?)`;/, (full, rawSvg) => `const sheepSvg = \`${rawSvg
+  .replace(/([`'"])(\s*<svg[\s\S]*?<\/svg>\s*)\1/g, (full, quote, rawSvg) => `\`${rawSvg
       .replace(/<!--([\s\S]*?)-->/g, '')
+      // Allow unquoted viewbox by converting spaces to commas: 0 0 36 36 -> 0,0,36,36
+      .replace(/\bviewbox\s*=\s*(["'])\s*([\d.-]+)\s+([\d.-]+)\s+([\d.-]+)\s+([\d.-]+)\s*\1/gi, ' viewbox=$2,$3,$4,$5')
       .replace(/>\s+</g, '><')
       .replace(/\s{2,}/g, ' ')
       .replace(/\s*=\s*/g, '=')
       .replace(/\s+\/>/g, '/>')
       .replace(/\s+>/g, '>')
       .replace(/\s+([a-zA-Z_:][-a-zA-Z0-9_:.]*)=/g, ' $1=')
-      .trim()}\`;`)
+      // Drop quotes only when the value is safely unquoted in HTML/SVG parsing
+      .replace(/\s([a-zA-Z_:][-a-zA-Z0-9_:.]*)=["']([#a-zA-Z0-9.,_:-]+)["']/g, ' $1=$2')
+      .trim()}\``)
   // Minify CSS template literals
   .replace(/`[^`]+`/g, tag => tag
     .replace(/`\s+/, '`')  // Remove newlines & spaces at start or string
@@ -102,6 +107,12 @@ const code = minifiedJs.code
   // .replaceAll('100px', '1in')
 
   // .replaceAll('19', '16+3') // Failed attempt to remove '9' to save bytes
+  // Prefer backticks for inline SVG strings
+  .replace(/(['"])(<svg[\s\S]*?<\/svg>)\1/g, (full, quote, svg) => `\`${svg}\``)
+  // Minify known CSS value token spacing in generated strings
+  .replace(/rotate \.([\d.]+s)/g, 'rotate.$1')
+  // Safely prefer backticks for simple string literals (no $, escapes, or newlines)
+  .replace(/'([^'`$\\\r\n]*)'/g, '`$1`')
   // Remove final semicolon
   .replace(/;$/, '');
 
