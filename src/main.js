@@ -1,7 +1,7 @@
 const platformHeight = 2; // Height of platforms in svh
 const platformStartWidth = 14;
 const platformEndWidth = 4;
-const horizontalRange = 25;
+const horizontalRange = 24;
 const platformSpacing = 40;
 const sheepSize = 8;
 // id="s" instead of 'parent.children[0]' is good to avoid square brackets entirely
@@ -88,12 +88,7 @@ const update = () => {
     sheepVY = jumpVelocity;
   }
 
-  if (sheepY - cameraY > cameraDeadzoneTop) {
-    cameraY = sheepY - cameraDeadzoneTop;
-  } else if (sheepY - cameraY < cameraDeadzoneBottom) {
-    cameraY = sheepY - cameraDeadzoneBottom;
-  }
-  if (cameraY < 0) cameraY = 0;
+  cameraY = Math.max(0, sheepY - Math.min(cameraDeadzoneTop, Math.max(cameraDeadzoneBottom, sheepY - cameraY)));
 
   // Render sheep
   sheepWrap.style.transform = `translate(${sheepX - sheepSize / 2}svh, ${-sheepY}svh) scale(${sheepFacing},1)`;

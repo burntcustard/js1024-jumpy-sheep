@@ -121,7 +121,7 @@ const packed = cmdRegPack(code, {
   varsNotReassigned : [
     'a',
     // 'b', // used in rgb()
-    'c',
+    // 'c',
     // 'd',
     's', // Used for sheep SVG element
   ],
