@@ -112,7 +112,7 @@ const packed = cmdRegPack(code, {
     // 'b', // used in rgb()
     'c',
     // 'd',
-    // 'e',
+    's', // Used for sheep SVG element
   ],
   // RegPack crush options figured out with trial and error on siorki.github.io/regPack.html
   crushGainFactor: parseFloat(2),
