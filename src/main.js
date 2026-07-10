@@ -19,7 +19,6 @@ const sheepSvg = `
   </svg>
 `;
 
-const worldLayer = document.createElement('div');
 // Platform tuple: [x, hitX, top] where hitX = width/2 + sheep radius
 const platforms = [...Array(99)].map((_,i) => {
   const width = platformStartWidth - (platformStartWidth - platformEndWidth) * i / 98;
@@ -33,7 +32,7 @@ const platforms = [...Array(99)].map((_,i) => {
   el.style.width = `${width}svh`;
   el.style.height = `${platformHeight}svh`;
   el.style.background = '#852';
-  worldLayer.append(el);
+  a.append(el);
   return [x, width / 2 + 2, y + platformHeight];
 });
 const sheepWrap = document.createElement('div');
@@ -53,14 +52,10 @@ let cameraY = 0;
 let sheepFacing = 1;
 let sheepTilt = 0;
 
-a.append(worldLayer);
 sheepWrap.innerHTML = sheepSvg;
-worldLayer.append(sheepWrap, grassStrip);
+a.append(sheepWrap, grassStrip);
 a.style.margin = '0';
 a.style.height = '100svh';
-
-worldLayer.style.position = 'fixed';
-worldLayer.style.inset = '0';
 
 grassStrip.style.position = 'absolute';
 grassStrip.style.inset = '0';
@@ -107,7 +102,7 @@ const update = () => {
 
   // Render platforms
   // Note that we always use two values for translate for consistency/compression
-  worldLayer.style.transform = `translate(0, ${cameraY}svh)`;
+  a.style.transform = `translate(0, ${cameraY}svh)`;
 
   // Render background
   const t = cameraY / 1600;
