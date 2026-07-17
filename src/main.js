@@ -38,7 +38,7 @@ const grassY = 4;
 let sheepY = grassY;
 let heldKeys = '';
 let tiltX = 0;
-const gravity = .1;
+const gravity = .09;
 const jumpVelocity = 3;
 const tiltDeadzone = 1;
 const tiltResponseRange = 2;
@@ -137,9 +137,12 @@ onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
 // };
 const onMotion = e => {
   // Use only gravity-adjusted X acceleration for left/right movement.
-  const signedTilt = -(e.accelerationIncludingGravity?.x || 0);
-  const tiltAmount = Math.abs(signedTilt);
-  tiltX = tiltAmount < tiltDeadzone ? 0 : Math.sign(signedTilt) * Math.min(1, (tiltAmount - tiltDeadzone) / tiltResponseRange);
+  // const signedTilt = -(e.accelerationIncludingGravity?.x || 0);
+  tiltX = e.accelerationIncludingGravity.x > tiltDeadzone
+    ? Math.min(1, (e.accelerationIncludingGravity.x - tiltDeadzone) / tiltResponseRange)
+    : e.accelerationIncludingGravity.x < -e.accelerationIncludingGravity.x
+      ? Math.max(-1, (e.accelerationIncludingGravity.x + tiltDeadzone) / tiltResponseRange)
+      : 0;
 
   // Commented out while testing single-input control:
   // accX = e.acceleration?.x;
