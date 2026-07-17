@@ -9,7 +9,7 @@ const grassY = 4;
 // The wrapper div handles position + movement transform so the sheep's own
 // transform-origin stays correct for the rotate on the svg
 const sheepHtml = `
-  <div id=w style="
+  <i id=w style="
     position: absolute;
     left: 50%;
     bottom: 0;
@@ -23,16 +23,16 @@ const sheepHtml = `
       <path d=m6,16c0,2-3,2-3,0s3-2,3,0 />
       <path d=m7,9q2-5,11-5,6,2,4,9-5,6-10,4-3-2,1-2t5-3q-1-4-6-2-3,1-5-1 fill="#fc5" />
     </svg>
-  </div>
+  </i>
 `;
 
 const grassHtml = `
-  <div style="
+  <i style="
     position: absolute;
     inset: auto 0 0;
     height: ${grassY}svh;
     background: #3a3;
-  "></div>
+  "></i>
 `;
 
 // Platform tuple: [x, hitX, top] where hitX = width/2 + sheep radius
@@ -42,7 +42,7 @@ const platforms = [...Array(99)].map((_,i) => (
   x = -horizontalRange + Math.random() * (horizontalRange * 2),
   y = (i + 1) * platformSpacing,
   platformsHtml += `
-    <div style="
+    <i style="
       position: absolute;
       left: 50%;
       bottom: ${y}svh;
@@ -50,14 +50,14 @@ const platforms = [...Array(99)].map((_,i) => (
       height: ${platformHeight}svh;
       background: #a72;
       translate: ${x - width / 2}svh 0;
-    "></div>
+    "></i>
   `,
   [x, width / 2 + 2, y + platformHeight]
 ));
 
 let sheepX = 0;
 let sheepY = grassY;
-let heldKeys = '';
+let heldKeys = {'R': 0, 'L': 0};
 let tiltX = 0;
 const gravity = .09;
 const jumpVelocity = 3;
@@ -75,9 +75,10 @@ a.style.height = '100svh'
 
 const update = () => {
   // Set sheep position
-  // 'g' and 'L' appear in 'ArrowRight' and 'ArrowLeft'. We avoid 'R'
-  // because that character does not appear in the rest of our code
-  const moveX = tiltX || heldKeys.includes('g') - heldKeys.includes('L');
+  // heldKeys tracks each arrow separately via e.key[5], which is 'R' for
+  // 'ArrowRight' and 'L' for 'ArrowLeft'. Holding both cancels out; releasing
+  // one resumes movement in the other's direction
+  const moveX = tiltX || heldKeys['R'] - heldKeys['L'];
   sheepX += moveX;
   moveX && (sheepFacing = moveX > 0 ? -1 : 1);
   sheepX = sheepX < -horizontalRange ? -horizontalRange : sheepX > horizontalRange ? horizontalRange : sheepX;
@@ -110,8 +111,10 @@ const update = () => {
   setTimeout(update, 16);
 };
 
-onkeydown = e => heldKeys += e.key;
-onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
+// 'ArrowRight' and 'ArrowLeft' are the only keys that matter for this game,
+// so we can just use e.key[5] to get 'R' or 'L' and store it in heldKeys
+onkeydown = e => heldKeys[e.key[5]] = 1;
+onkeyup = e => heldKeys[e.key[5]] = 0;
 
 ondevicemotion = e => {
   // Use only gravity-adjusted X acceleration for left/right movement.
