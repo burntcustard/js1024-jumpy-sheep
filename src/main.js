@@ -9,7 +9,7 @@ const sheepSvg = `
   <svg viewbox="0 0 36 36" id="s">
     <path
       fill="#eee"
-      d="M36 21q0-11-19-11-2-4-8-3C5 8-1 13 0 18q1 6 8 5 0 5 3 7q2 6 4 6l3-3 8-1l2 4c2 1 4-5 5-7q3-2 3-8"
+      d="M36 21q0-11-19-11-2-4-8-3-3 1-6 4t-3 7q1 6 8 5 0 5 3 7 2 6 4 6 2-3 4-3 8-1 9 3 2-1 5-6 3-3 3-9"
     />
     <path
       d="M6 16a1.5 1.5 0 1 1-3 0a1.5 1.5 0 1 1 3 0"/>
@@ -45,7 +45,7 @@ const grassY = 4;
 let sheepY = grassY;
 let heldKeys = '';
 let tiltX = 0;
-let alpha, beta, gamma, accX, accY, accZ, gravX, gravY, gravZ, rotA, rotB, rotG, motionInterval;
+let gravX;
 const gravity = .09;
 const jumpVelocity = 2.9;
 const cameraDeadzoneTop = 60;
@@ -61,18 +61,18 @@ a.style.margin = '0';
 a.style.height = '100svh'
 
 // DEBUG SENSOR HUD (comment out this section later)
-const sensorHud = document.createElement('div');
-document.documentElement.append(sensorHud);
-sensorHud.style.position = 'fixed';
-sensorHud.style.left = '0';
-sensorHud.style.top = '0';
-sensorHud.style.zIndex = '9';
-sensorHud.style.whiteSpace = 'pre';
-sensorHud.style.font = '10px monospace';
-sensorHud.style.color = '#fff';
-sensorHud.style.background = '#0008';
-sensorHud.style.padding = '.3em';
-sensorHud.style.pointerEvents = 'none';
+// const sensorHud = document.createElement('div');
+// document.documentElement.append(sensorHud);
+// sensorHud.style.position = 'fixed';
+// sensorHud.style.left = '0';
+// sensorHud.style.top = '0';
+// sensorHud.style.zIndex = '9';
+// sensorHud.style.whiteSpace = 'pre';
+// sensorHud.style.font = '10px monospace';
+// sensorHud.style.color = '#fff';
+// sensorHud.style.background = '#0008';
+// sensorHud.style.padding = '.3em';
+// sensorHud.style.pointerEvents = 'none';
 
 grassStrip.style.position = 'absolute';
 grassStrip.style.inset = '0';
@@ -118,13 +118,13 @@ const update = () => {
   // Render background
   a.style.background = `color-mix(in hwb, #8de, #314 ${cameraY / 16}%)`;
 
-  sensorHud.textContent =
-`tiltX ${tiltX}
-alpha ${formatSensor(alpha)} beta ${formatSensor(beta)} gamma ${formatSensor(gamma)}
-acc ${formatSensor(accX)} ${formatSensor(accY)} ${formatSensor(accZ)}
-grav ${formatSensor(gravX)} ${formatSensor(gravY)} ${formatSensor(gravZ)}
-rot ${formatSensor(rotA)} ${formatSensor(rotB)} ${formatSensor(rotG)}
-dt ${formatSensor(motionInterval)}`;
+//   sensorHud.textContent =
+// `tiltX ${tiltX}
+// alpha ${formatSensor(alpha)} beta ${formatSensor(beta)} gamma ${formatSensor(gamma)}
+// acc ${formatSensor(accX)} ${formatSensor(accY)} ${formatSensor(accZ)}
+// grav ${formatSensor(gravX)} ${formatSensor(gravY)} ${formatSensor(gravZ)}
+// rot ${formatSensor(rotA)} ${formatSensor(rotB)} ${formatSensor(rotG)}
+// dt ${formatSensor(motionInterval)}`;
 
   // Just under 60 updates per second
   setTimeout(update, 16);
@@ -132,27 +132,34 @@ dt ${formatSensor(motionInterval)}`;
 
 onkeydown = e => heldKeys += e.key;
 onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
-const onOrientation = e => {
-  alpha = e.alpha;
-  beta = e.beta;
-  gamma = e.gamma;
-  const g = gamma || 0;
-  const a = Math.abs(g);
-  tiltX = a < 5 ? 0 : Math.sign(g) * Math.min(1, (a - 5) / 10);
-};
+// Orientation control disabled while testing a single motion signal.
+// const onOrientation = e => {
+//   alpha = e.alpha;
+//   beta = e.beta;
+//   gamma = e.gamma;
+//   const g = gamma || 0;
+//   const a = Math.abs(g);
+//   tiltX = a < 5 ? 0 : Math.sign(g) * Math.min(1, (a - 5) / 10);
+// };
 const onMotion = e => {
-  accX = e.acceleration?.x;
-  accY = e.acceleration?.y;
-  accZ = e.acceleration?.z;
+  // Use only gravity-adjusted X acceleration for left/right movement.
   gravX = e.accelerationIncludingGravity?.x;
-  gravY = e.accelerationIncludingGravity?.y;
-  gravZ = e.accelerationIncludingGravity?.z;
-  rotA = e.rotationRate?.alpha;
-  rotB = e.rotationRate?.beta;
-  rotG = e.rotationRate?.gamma;
-  motionInterval = e.interval;
+  const g = gravX || 0;
+  const a = Math.abs(g);
+  tiltX = a < 1.5 ? 0 : Math.sign(g) * Math.min(1, (a - 1.5) / 4);
+
+  // Commented out while testing single-input control:
+  // accX = e.acceleration?.x;
+  // accY = e.acceleration?.y;
+  // accZ = e.acceleration?.z;
+  // gravY = e.accelerationIncludingGravity?.y;
+  // gravZ = e.accelerationIncludingGravity?.z;
+  // rotA = e.rotationRate?.alpha;
+  // rotB = e.rotationRate?.beta;
+  // rotG = e.rotationRate?.gamma;
+  // motionInterval = e.interval;
 };
-ondeviceorientation = onOrientation;
+// ondeviceorientation = onOrientation;
 ondevicemotion = onMotion;
 
 update();
