@@ -53,7 +53,7 @@ const cameraDeadzoneBottom = 10;
 let sheepVY = jumpVelocity;
 let cameraY = 0;
 let sheepFacing = 1;
-const formatSensor = n => n == null ? '-' : n.toFixed(2);
+// const formatSensor = n => n == null ? '-' : n.toFixed(2);
 
 sheepWrap.innerHTML = sheepSvg;
 a.append(sheepWrap, grassStrip);
@@ -144,9 +144,9 @@ onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
 const onMotion = e => {
   // Use only gravity-adjusted X acceleration for left/right movement.
   gravX = e.accelerationIncludingGravity?.x;
-  const g = gravX || 0;
+  const g = -(gravX || 0);
   const a = Math.abs(g);
-  tiltX = a < 1.5 ? 0 : Math.sign(g) * Math.min(1, (a - 1.5) / 4);
+  tiltX = a < 1 ? 0 : Math.sign(g) * Math.min(1, (a - 1) / 2);
 
   // Commented out while testing single-input control:
   // accX = e.acceleration?.x;
