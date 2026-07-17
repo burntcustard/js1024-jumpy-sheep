@@ -40,8 +40,8 @@ let heldKeys = '';
 let tiltX = 0;
 const gravity = .1;
 const jumpVelocity = 3;
-const motionDeadzone = 1;
-const motionResponseRange = 2;
+const tiltDeadzone = 1;
+const tiltResponseRange = 2;
 const cameraDeadzoneTop = 60;
 const cameraDeadzoneBottom = 10;
 let sheepVY = jumpVelocity;
@@ -136,10 +136,10 @@ onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
 //   tiltX = a < 5 ? 0 : Math.sign(g) * Math.min(1, (a - 5) / 10);
 // };
 const onMotion = e => {
-  // Use only raw X acceleration for left/right movement.
-  const signedAcceleration = -(e.acceleration?.x || 0);
-  const accelerationAmount = Math.abs(signedAcceleration);
-  tiltX = accelerationAmount < motionDeadzone ? 0 : Math.sign(signedAcceleration) * Math.min(1, (accelerationAmount - motionDeadzone) / motionResponseRange);
+  // Use only gravity-adjusted X acceleration for left/right movement.
+  const signedTilt = -(e.accelerationIncludingGravity?.x || 0);
+  const tiltAmount = Math.abs(signedTilt);
+  tiltX = tiltAmount < tiltDeadzone ? 0 : Math.sign(signedTilt) * Math.min(1, (tiltAmount - tiltDeadzone) / tiltResponseRange);
 
   // Commented out while testing single-input control:
   // accX = e.acceleration?.x;
