@@ -137,11 +137,10 @@ onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
 // };
 const onMotion = e => {
   // Use only gravity-adjusted X acceleration for left/right movement.
-  // const signedTilt = -(e.accelerationIncludingGravity?.x || 0);
-  tiltX = e.accelerationIncludingGravity.x > tiltDeadzone
-    ? Math.min(1, (e.accelerationIncludingGravity.x - tiltDeadzone) / tiltResponseRange)
-    : e.accelerationIncludingGravity.x < -e.accelerationIncludingGravity.x
-      ? Math.max(-1, (e.accelerationIncludingGravity.x + tiltDeadzone) / tiltResponseRange)
+  tiltX = -e.accelerationIncludingGravity.x > tiltDeadzone
+    ? Math.min(1, (-e.accelerationIncludingGravity.x - tiltDeadzone) / tiltResponseRange)
+    : -e.accelerationIncludingGravity.x < -tiltDeadzone
+      ? Math.max(-1, (-e.accelerationIncludingGravity.x + tiltDeadzone) / tiltResponseRange)
       : 0;
 
   // Commented out while testing single-input control:
