@@ -1,4 +1,4 @@
-const platformHeight = 2; // Height of platforms in svh
+const platformHeight = 2; // Height of platforms in vh
 const platformStartWidth = 14;
 const platformEndWidth = 4;
 const horizontalRange = 24;
@@ -16,8 +16,8 @@ const sheepHtml = `
   ">
     <svg id=s viewBox=0,0,36,36 style="
       transition: rotate .2s;
-      width: ${sheepSize}svh;
-      height: ${sheepSize}svh;
+      width: ${sheepSize}vh;
+      height: ${sheepSize}vh;
     ">
       <path d=m18,33,8-1,2,4c2,1,4-5,5-7q3-2,3-8,0-11-19-11-2-4-8-3C5,8-1,13,0,18q1,6,8,5,0,5,3,7,2,6,4,6z fill=#eee />
       <path d=m6,16c0,2-3,2-3,0s3-2,3,0 />
@@ -30,7 +30,7 @@ const grassHtml = `
   <i style="
     position: absolute;
     inset: auto 0 0;
-    height: ${grassY}svh;
+    height: ${grassY}vh;
     background: #3a3;
   "></i>
 `;
@@ -45,11 +45,11 @@ const platforms = [...Array(99)].map((_,i) => (
     <i style="
       position: absolute;
       left: 50%;
-      bottom: ${y}svh;
-      width: ${width}svh;
-      height: ${platformHeight}svh;
+      bottom: ${y}vh;
+      width: ${width}vh;
+      height: ${platformHeight}vh;
       background: #a72;
-      translate: ${x - width / 2}svh 0;
+      translate: ${x - width / 2}vh 0;
     "></i>
   `,
   [x, width / 2 + 2, y + platformHeight]
@@ -71,7 +71,7 @@ let sheepFacing = 1;
 
 a.innerHTML = platformsHtml + sheepHtml + grassHtml;
 a.style.margin = '0';
-a.style.height = '100svh'
+a.style.height = '100vh'
 
 const update = () => {
   // Set sheep position
@@ -96,13 +96,13 @@ const update = () => {
   cameraY = Math.max(0, sheepY - Math.min(cameraDeadzoneTop, Math.max(cameraDeadzoneBottom, sheepY - cameraY)));
 
   // Render sheep
-  w.style.translate = `${sheepX - sheepSize / 2}svh ${-sheepY}svh`;
+  w.style.translate = `${sheepX - sheepSize / 2}vh ${-sheepY}vh`;
   w.style.scale = `${sheepFacing} 1`;
   s.style.rotate = `${15 * moveX * sheepFacing}deg`;
 
   // Render platforms
   // Note that we always use two values for translate for consistency/compression
-  a.style.translate = `0 ${cameraY}svh`;
+  a.style.translate = `0 ${cameraY}vh`;
 
   // Render background
   a.style.background = `color-mix(in hwb, #8de, #314 ${cameraY / 16}%)`;
