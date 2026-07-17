@@ -86,7 +86,7 @@ const update = () => {
   // because that character does not appear in the rest of our code
   const moveX = tiltX || heldKeys.includes('g') - heldKeys.includes('L');
   sheepX += moveX;
-  moveX && (sheepFacing = -Math.sign(moveX));
+  moveX && (sheepFacing = moveX > 0 ? -1 : 1);
   sheepX = sheepX < -horizontalRange ? -horizontalRange : sheepX > horizontalRange ? horizontalRange : sheepX;
   sheepVY -= gravity;
   sheepY += sheepVY;
@@ -112,49 +112,20 @@ const update = () => {
   // Render background
   a.style.background = `color-mix(in hwb, #8de, #314 ${cameraY / 16}%)`;
 
-//   sensorHud.textContent =
-// `tiltX ${tiltX}
-// alpha ${formatSensor(alpha)} beta ${formatSensor(beta)} gamma ${formatSensor(gamma)}
-// acc ${formatSensor(accX)} ${formatSensor(accY)} ${formatSensor(accZ)}
-// grav ${formatSensor(gravX)} ${formatSensor(gravY)} ${formatSensor(gravZ)}
-// rot ${formatSensor(rotA)} ${formatSensor(rotB)} ${formatSensor(rotG)}
-// dt ${formatSensor(motionInterval)}`;
-
   // Just under 60 updates per second
   setTimeout(update, 16);
 };
 
 onkeydown = e => heldKeys += e.key;
 onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
-// Orientation control disabled while testing a single motion signal.
-// const onOrientation = e => {
-//   alpha = e.alpha;
-//   beta = e.beta;
-//   gamma = e.gamma;
-//   const g = gamma || 0;
-//   const a = Math.abs(g);
-//   tiltX = a < 5 ? 0 : Math.sign(g) * Math.min(1, (a - 5) / 10);
-// };
-const onMotion = e => {
+
+ondevicemotion = e => {
   // Use only gravity-adjusted X acceleration for left/right movement.
   tiltX = -e.accelerationIncludingGravity.x > tiltDeadzone
     ? Math.min(1, (-e.accelerationIncludingGravity.x - tiltDeadzone) / tiltResponseRange)
     : -e.accelerationIncludingGravity.x < -tiltDeadzone
       ? Math.max(-1, (-e.accelerationIncludingGravity.x + tiltDeadzone) / tiltResponseRange)
       : 0;
-
-  // Commented out while testing single-input control:
-  // accX = e.acceleration?.x;
-  // accY = e.acceleration?.y;
-  // accZ = e.acceleration?.z;
-  // gravY = e.accelerationIncludingGravity?.y;
-  // gravZ = e.accelerationIncludingGravity?.z;
-  // rotA = e.rotationRate?.alpha;
-  // rotB = e.rotationRate?.beta;
-  // rotG = e.rotationRate?.gamma;
-  // motionInterval = e.interval;
 };
-// ondeviceorientation = onOrientation;
-ondevicemotion = onMotion;
 
 update();
