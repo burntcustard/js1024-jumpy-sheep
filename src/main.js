@@ -3,20 +3,13 @@ const platformStartWidth = 14;
 const platformEndWidth = 4;
 const horizontalRange = 24;
 const platformSpacing = 40;
-const sheepSize = 8;
+const sheepSize = 10;
 // id="s" instead of 'parent.children[0]' is good to avoid square brackets entirely
 const sheepSvg = `
-  <svg viewbox="0 0 36 36" id="s">
-    <path
-      fill="#eee"
-      d="M36 21q0-11-19-11-2-4-8-3C5 8-1 13 0 18q1 6 8 5 0 5 3 7q2 6 4 6l3-3 8-1l2 4c2 1 4-5 5-7q3-2 3-8"
-    />
-    <path
-      d="M6 16a1.5 1.5 0 1 1-3 0 1.5 1.5 0 1 1 3 0"/>
-    <path
-      fill="#fc5"
-      d="M18 4q6 2 4 9-5 6-10 4-3-2 1-2t5-3q-1-4-6-2q-3 1-5-1q2-5 11-5"
-    />
+  <svg id=s viewBox=0,0,36,36>
+    <path d=m18,33,8-1,2,4c2,1,4-5,5-7q3-2,3-8,0-11-19-11-2-4-8-3C5,8-1,13,0,18q1,6,8,5,0,5,3,7,2,6,4,6z fill=#eee />
+    <path d=m6,16c0,2-3,2-3,0s3-2,3,0 />
+    <path d=m7,9q2-5,11-5,6,2,4,9-5,6-10,4-3-2,1-2t5-3q-1-4-6-2-3,1-5-1 fill="#fc5" />
   </svg>
 `;
 
@@ -45,8 +38,8 @@ const grassY = 4;
 let sheepY = grassY;
 let heldKeys = '';
 let tiltX = 0;
-const gravity = .09;
-const jumpVelocity = 2.9;
+const gravity = .1;
+const jumpVelocity = 3;
 const tiltDeadzone = 1;
 const tiltResponseRange = 2;
 const cameraDeadzoneTop = 60;
