@@ -9,10 +9,10 @@ const sheepSvg = `
   <svg viewbox="0 0 36 36" id="s">
     <path
       fill="#eee"
-      d="M36 21q0-11-19-11-2-4-8-3-3 1-6 4t-3 7q1 6 8 5 0 5 3 7 2 6 4 6 2-3 4-3 8-1 9 3 2-1 5-6 3-3 3-9"
+      d="M36 21q0-11-19-11-2-4-8-3C5 8-1 13 0 18q1 6 8 5 0 5 3 7q2 6 4 6l3-3 8-1l2 4c2 1 4-5 5-7q3-2 3-8"
     />
     <path
-      d="M6 16a1.5 1.5 0 1 1-3 0a1.5 1.5 0 1 1 3 0"/>
+      d="M6 16a1.5 1.5 0 1 1-3 0 1.5 1.5 0 1 1 3 0"/>
     <path
       fill="#fc5"
       d="M18 4q6 2 4 9-5 6-10 4-3-2 1-2t5-3q-1-4-6-2q-3 1-5-1q2-5 11-5"
@@ -45,9 +45,10 @@ const grassY = 4;
 let sheepY = grassY;
 let heldKeys = '';
 let tiltX = 0;
-let gravX;
 const gravity = .09;
 const jumpVelocity = 2.9;
+const tiltDeadzone = 1;
+const tiltResponseRange = 2;
 const cameraDeadzoneTop = 60;
 const cameraDeadzoneBottom = 10;
 let sheepVY = jumpVelocity;
@@ -143,10 +144,9 @@ onkeyup = e => heldKeys = heldKeys.replaceAll(e.key, '');
 // };
 const onMotion = e => {
   // Use only gravity-adjusted X acceleration for left/right movement.
-  gravX = e.accelerationIncludingGravity?.x;
-  const g = -(gravX || 0);
-  const a = Math.abs(g);
-  tiltX = a < 1 ? 0 : Math.sign(g) * Math.min(1, (a - 1) / 2);
+  const signedTilt = -(e.accelerationIncludingGravity?.x || 0);
+  const tiltAmount = Math.abs(signedTilt);
+  tiltX = tiltAmount < tiltDeadzone ? 0 : Math.sign(signedTilt) * Math.min(1, (tiltAmount - tiltDeadzone) / tiltResponseRange);
 
   // Commented out while testing single-input control:
   // accX = e.acceleration?.x;
