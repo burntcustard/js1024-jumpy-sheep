@@ -32,8 +32,9 @@ let js = readFileSync('src/main.js', 'utf8');
 
 // Some custom mangling of JS to assist / work around Terser
 js = js
-  // Minify inline SVG literals
-  .replace(/([`'"])(\s*<svg[\s\S]*?<\/svg>\s*)\1/g, (full, quote, rawSvg) => `\`${rawSvg
+  // Minify inline SVG literals (matched anywhere, so a wrapper element around
+  // the <svg> in the same template literal is fine)
+  .replace(/<svg[\s\S]*?<\/svg>/g, rawSvg => rawSvg
       .replace(/<!--([\s\S]*?)-->/g, '')
       .replace(/>\s+</g, '><')
       .replace(/\s{2,}/g, ' ')
@@ -45,10 +46,14 @@ js = js
       .replace(/\s([a-zA-Z_:][-a-zA-Z0-9_:.]*)=["']([#a-zA-Z0-9.,_:-]+)["']/g, ' $1=$2')
       // Prevent '/>' from being consumed as part of the final unquoted attribute value.
       .replace(/=([#a-zA-Z0-9.,_:-]+)\/>/g, '=$1 />')
-      .trim()}\``)
+      .trim())
   // Minify CSS template literals
   .replace(/`[^`]+`/g, tag => tag
-    .replace(/`\s+/, '`')  // Remove newlines & spaces at start or string
+    .replace(/`\s+/, '`')  // Remove newlines & spaces at start of string
+    .replace(/\s+`/, '`')  // Remove newlines & spaces at end of string
+    .replace(/="\s+/g, '="') // Remove whitespace after opening attribute quotes
+    .replace(/\s+"/g, '"') // Remove whitespace before closing attribute quotes
+    .replace(/>\s+</g, '><') // Collapse whitespace between HTML tags
     // .replace(/\n\s+/g, ' ') // Shrink newlines & spaces within values
     .replace(/:\s/g, ':')  // Remove spaces in between property & values`
     .replace(/,\s/g, ',') // Remove space after commas
@@ -56,6 +61,7 @@ js = js
     .replace(/\s\/\s/g, '/') // Remove spaces around `/` in hsl
     .replace(/;\s+/g, ';') // Remove newlines & spaces after semicolons
     .replace(/\)\s/g, ')') // Remove spaces after closing brackets
+    .replace(/;"/g, '"') // Remove trailing semicolons in inline styles
     .replace(/;`/, '`') // Remove final semicolons
     .replace(/\)\`/g, '`') // Remove closing brackets usually at the end of calc
   )
@@ -117,13 +123,14 @@ const code = minifiedJs.code
   .replace(/;$/, '');
 
 const packed = cmdRegPack(code, {
-  // withMath: true, // Sometimes worth wrapping with Math()
+  withMath: true, // Sometimes worth wrapping with Math()
   varsNotReassigned : [
     'a',
     // 'b', // used in rgb()
     // 'c',
     // 'd',
     's', // Used for sheep SVG element
+    'w', // Used for sheep wrapper element
   ],
   // RegPack crush options figured out with trial and error on siorki.github.io/regPack.html
   crushGainFactor: parseFloat(2),
