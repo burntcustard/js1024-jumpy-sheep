@@ -4,7 +4,7 @@ const platformEndWidth = 4;
 const horizontalRange = 24;
 const platformSpacing = 40;
 const sheepSize = 10;
-const grassY = 4;
+const grassHeight = 4;
 // id="s" instead of 'parent.children[0]' is good to avoid square brackets entirely
 // The wrapper div handles position + movement transform so the sheep's own
 // transform-origin stays correct for the rotate on the svg
@@ -16,16 +16,6 @@ const sheepHtml = `
       <path d=m7,9q2-5,11-5,6,2,4,9-5,6-10,4-3-2,1-2t5-3q-1-4-6-2-3,1-5-1 fill="#fc5" />
     </svg>
   </i>
-`;
-
-const grassHtml = `
-  <i style="
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: ${grassY}svh;
-    background: #3a3;
-  "></i>
 `;
 
 // Platform tuple: [x, hitX, top] where hitX = width/2 + sheep radius
@@ -49,7 +39,7 @@ const platforms = [...Array(99)].map((_,i) => (
 ));
 
 let sheepX = 0;
-let sheepY = grassY;
+let sheepY = 0;
 let heldKeys = {'R': 0, 'L': 0};
 let tiltX = 0;
 const gravity = .09;
@@ -77,7 +67,7 @@ const update = () => {
   // Bounce the sheep if its in a platform or the ground
   // Using bitwise OR to save a character but might not be worth it if more '||' added
   // Tuple indexes: [0]=x, [1]=hitX, [2]=top
-  if (sheepY <= grassY | platforms.some(platform => Math.abs(sheepX - platform[0]) < platform[1]
+  if (sheepY <= 0 | platforms.some(platform => Math.abs(sheepX - platform[0]) < platform[1]
       & sheepY - sheepVY >= platform[2] & sheepY <= platform[2])) {
     sheepVY = jumpVelocity;
   }
@@ -108,7 +98,8 @@ const update = () => {
   // consistency/compression), and the background "sky"
   a.style = `
     margin: 0;
-    height: 100svh;
+    height: ${100 - grassHeight}svh;
+    border-bottom: ${grassHeight}svh solid #3a3;
     translate: 0 ${cameraY}svh;
     background: color-mix(in hwb, #8de, #314 ${cameraY / 40}%);
   `;
@@ -134,6 +125,6 @@ ondevicemotion = e => {
   );
 };
 
-a.innerHTML = platformsHtml + sheepHtml + grassHtml;
+a.innerHTML = platformsHtml + sheepHtml;
 
 setInterval(update, 16);
