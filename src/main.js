@@ -9,15 +9,8 @@ const grassY = 4;
 // The wrapper div handles position + movement transform so the sheep's own
 // transform-origin stays correct for the rotate on the svg
 const sheepHtml = `
-  <i id=w style="
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-  ">
-    <svg id=s viewbox=0,0,36,36 style="
-      transition: rotate .2s;
-      width: ${sheepSize}svh;
-    ">
+  <i id=w>
+    <svg id=s viewbox=0,0,36,36>
       <path d=m18,33,8-1,2,4c2,1,4-5,5-7q3-2,3-8,0-11-27-14C5,8-1,13,0,18q1,6,8,5,0,5,3,7,2,6,4,6 fill=#eee />
       <path d=m6,16c0,2-3,2-3,0s3-2,3,0 />
       <path d=m7,9q2-5,11-5,6,2,4,9-5,6-10,4-3-2,1-2t5-3q-1-4-6-2-3,1-5-1 fill="#fc5" />
@@ -69,7 +62,6 @@ let cameraY = 0;
 let sheepFacing = 1;
 
 a.innerHTML = platformsHtml + sheepHtml + grassHtml;
-a.style = `margin:0; height:100svh;`;
 
 const update = () => {
   // Set sheep position
@@ -93,17 +85,29 @@ const update = () => {
 
   cameraY = sheepY - Math.min(sheepY, cameraDeadzoneTop, Math.max(cameraDeadzoneBottom, sheepY - cameraY));
 
-  // Render sheep
-  w.style.translate = `${sheepX - sheepSize / 2}svh ${-sheepY}svh`;
-  w.style.scale = `${sheepFacing} 1`;
-  s.style.rotate = `${15 * moveX * sheepFacing}deg`;
+  // Render sheep: base layout + movement transform live on the wrapper,
+  // and the tilt rotation lives on the svg itself
+  w.style = `
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    translate: ${sheepX - sheepSize / 2}svh ${-sheepY}svh;
+    scale: ${sheepFacing} 1;
+  `;
+  s.style = `
+    transition: rotate .2s;
+    width: ${sheepSize}svh;
+    rotate: ${15 * moveX * sheepFacing}deg;
+  `;
 
-  // Render platforms
-  // Note that we always use two values for translate for consistency/compression
-  a.style.translate = `0 ${cameraY}svh`;
-
-  // Render background
-  a.style.background = `color-mix(in hwb, #8de, #314 ${cameraY / 16}%)`;
+  // Render body: base layout, camera translate (two values for
+  // consistency/compression), and the sky background
+  a.style = `
+    margin: 0;
+    height: 100svh;
+    translate: 0 ${cameraY}svh;
+    background: color-mix(in hwb, #8de, #314 ${cameraY / 16}%);
+  `;
 };
 
 // 'ArrowRight' and 'ArrowLeft' are the only keys that matter for this game,
