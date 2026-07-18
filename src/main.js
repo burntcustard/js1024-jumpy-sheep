@@ -81,7 +81,11 @@ const update = () => {
     sheepVY = jumpVelocity;
   }
 
-  cameraY = sheepY - Math.min(sheepY, cameraDeadzoneTop, Math.max(cameraDeadzoneBottom, sheepY - cameraY));
+  cameraY = sheepY - Math.min(
+    sheepY,
+    cameraDeadzoneTop,
+    Math.max(cameraDeadzoneBottom, sheepY - cameraY)
+  );
 
   // Render sheep wrapper
   w.style = `
