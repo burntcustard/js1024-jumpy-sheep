@@ -21,7 +21,8 @@ const sheepHtml = `
 const grassHtml = `
   <i style="
     position: absolute;
-    inset: auto 0 0;
+    bottom: 0;
+    width: 100%;
     height: ${grassY}svh;
     background: #3a3;
   "></i>
