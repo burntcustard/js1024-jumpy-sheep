@@ -93,7 +93,7 @@ const update = () => {
     sheepVY = jumpVelocity;
   }
 
-  cameraY = Math.max(0, sheepY - Math.min(cameraDeadzoneTop, Math.max(cameraDeadzoneBottom, sheepY - cameraY)));
+  cameraY = sheepY - Math.min(sheepY, cameraDeadzoneTop, Math.max(cameraDeadzoneBottom, sheepY - cameraY));
 
   // Render sheep
   w.style.translate = `${sheepX - sheepSize / 2}vh ${-sheepY}vh`;
