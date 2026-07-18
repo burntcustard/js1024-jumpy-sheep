@@ -20,7 +20,7 @@ const options = {
     // Don't mangle some characters as they're used in the packed code.
     // This is needed to have duplicate CSS strings that pack well.
     // And for .forEach(x,y) to have super consistent x,y names
-    reserved: ['a', 'b', 'c', 'd', 'e'],
+    reserved: [],
   },
   format: {
     wrap_func_args: false,
