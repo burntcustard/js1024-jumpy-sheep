@@ -61,8 +61,6 @@ let sheepVY = jumpVelocity;
 let cameraY = 0;
 let sheepFacing = 1;
 
-a.innerHTML = platformsHtml + sheepHtml + grassHtml;
-
 const update = () => {
   // Set sheep position
   // heldKeys tracks each arrow separately via e.key[5], which is 'R' for
@@ -130,5 +128,7 @@ ondevicemotion = e => {
     )
   );
 };
+
+a.innerHTML = platformsHtml + sheepHtml + grassHtml;
 
 setInterval(update, 16);
