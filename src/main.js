@@ -69,7 +69,7 @@ let cameraY = 0;
 let sheepFacing = 1;
 
 a.innerHTML = platformsHtml + sheepHtml + grassHtml;
-a.style = 'margin:0;height:100vh';
+a.style = `margin:0; height:100vh;`;
 
 const update = () => {
   // Set sheep position
