@@ -114,7 +114,16 @@ onkeyup = e => heldKeys[e.key[5]] = 0;
 ondevicemotion = e => {
   // Use only gravity-adjusted X acceleration for left/right movement.
   // Soft deadzone: subtract the clamped value (deadzone) then clamp the result.
-  tiltX = Math.max(-1, Math.min(1, (-e.accelerationIncludingGravity.x - Math.max(-1, Math.min(1, -e.accelerationIncludingGravity.x))) / tiltResponseRange));
+  tiltX = Math.max(
+    -1,
+    Math.min(
+      1,
+      (
+        -e.accelerationIncludingGravity.x
+        - Math.max(-1, Math.min(1, -e.accelerationIncludingGravity.x))
+      ) / tiltResponseRange
+    )
+  );
 };
 
 setInterval(update, 16);
