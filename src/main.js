@@ -17,7 +17,6 @@ const sheepHtml = `
     <svg id=s viewbox=0,0,36,36 style="
       transition: rotate .2s;
       width: ${sheepSize}vh;
-      height: ${sheepSize}vh;
     ">
       <path d=m18,33,8-1,2,4c2,1,4-5,5-7q3-2,3-8,0-11-27-14C5,8-1,13,0,18q1,6,8,5,0,5,3,7,2,6,4,6 fill=#eee />
       <path d=m6,16c0,2-3,2-3,0s3-2,3,0 />
@@ -70,8 +69,7 @@ let cameraY = 0;
 let sheepFacing = 1;
 
 a.innerHTML = platformsHtml + sheepHtml + grassHtml;
-a.style.margin = '0';
-a.style.height = '100vh'
+a.style = 'margin:0;height:100vh';
 
 const update = () => {
   // Set sheep position
@@ -81,7 +79,7 @@ const update = () => {
   const moveX = tiltX || heldKeys['R'] - heldKeys['L'];
   sheepX += moveX;
   moveX && (sheepFacing = moveX > 0 ? -1 : 1);
-  sheepX = sheepX < -horizontalRange ? -horizontalRange : sheepX > horizontalRange ? horizontalRange : sheepX;
+  sheepX = Math.max(-horizontalRange, Math.min(horizontalRange, sheepX));
   sheepVY -= gravity;
   sheepY += sheepVY;
 
@@ -106,9 +104,6 @@ const update = () => {
 
   // Render background
   a.style.background = `color-mix(in hwb, #8de, #314 ${cameraY / 16}%)`;
-
-  // Just under 60 updates per second
-  setTimeout(update, 16);
 };
 
 // 'ArrowRight' and 'ArrowLeft' are the only keys that matter for this game,
@@ -118,11 +113,8 @@ onkeyup = e => heldKeys[e.key[5]] = 0;
 
 ondevicemotion = e => {
   // Use only gravity-adjusted X acceleration for left/right movement.
-  tiltX = -e.accelerationIncludingGravity.x > tiltDeadzone
-    ? Math.min(1, (-e.accelerationIncludingGravity.x - tiltDeadzone) / tiltResponseRange)
-    : -e.accelerationIncludingGravity.x < -tiltDeadzone
-      ? Math.max(-1, (-e.accelerationIncludingGravity.x + tiltDeadzone) / tiltResponseRange)
-      : 0;
+  // Soft deadzone: subtract the clamped value (deadzone) then clamp the result.
+  tiltX = Math.max(-1, Math.min(1, (-e.accelerationIncludingGravity.x - Math.max(-1, Math.min(1, -e.accelerationIncludingGravity.x))) / tiltResponseRange));
 };
 
-update();
+setInterval(update, 16);
