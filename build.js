@@ -99,7 +99,7 @@ const code = minifiedJs.code
   // .replaceAll('{d.remove()}', 'd.remove()')
   // .replaceAll('t=>{t?.remove()}', 't=>t?.remove()')
 
-  // Replace '=()=>' with '=v=>'. Actually increases size by 2B
+  // Replace '=()=>' with '=v=>'. Doesn't make a difference
   // .replaceAll('=()=>', '=v=>')
 
   // Replace all double quotes with backticks for consistency
