@@ -85,8 +85,7 @@ const update = () => {
 
   cameraY = sheepY - Math.min(sheepY, cameraDeadzoneTop, Math.max(cameraDeadzoneBottom, sheepY - cameraY));
 
-  // Render sheep: base layout + movement transform live on the wrapper,
-  // and the tilt rotation lives on the svg itself
+  // Render sheep wrapper
   w.style = `
     position: absolute;
     left: 50%;
@@ -94,6 +93,8 @@ const update = () => {
     translate: ${sheepX - sheepSize / 2}svh ${-sheepY}svh;
     scale: ${sheepFacing} 1;
   `;
+
+  // Render sheep. Height isn't needed because its implicit via viewBox + width
   s.style = `
     transition: rotate .2s;
     width: ${sheepSize}svh;
@@ -101,7 +102,7 @@ const update = () => {
   `;
 
   // Render body: base layout, camera translate (two values for
-  // consistency/compression), and the sky background
+  // consistency/compression), and the background "sky"
   a.style = `
     margin: 0;
     height: 100svh;
