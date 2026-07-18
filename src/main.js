@@ -106,7 +106,7 @@ const update = () => {
     margin: 0;
     height: 100svh;
     translate: 0 ${cameraY}svh;
-    background: color-mix(in hwb, #8de, #314 ${cameraY / 16}%);
+    background: color-mix(in hwb, #8de, #314 ${cameraY / 40}%);
   `;
 };
 
