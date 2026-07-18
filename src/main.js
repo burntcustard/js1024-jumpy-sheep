@@ -47,7 +47,7 @@ const platforms = [...Array(99)].map((_,i) => (
       bottom: ${y}svh;
       width: ${width}svh;
       height: ${platformHeight}svh;
-      background: #a72;
+      background: #b72;
       translate: ${x - width / 2}svh 0;
     "></i>
   `,
