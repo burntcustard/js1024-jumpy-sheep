@@ -14,7 +14,7 @@ const sheepHtml = `
     left: 50%;
     bottom: 0;
   ">
-    <svg id=s viewBox=0,0,36,36 style="
+    <svg id=s viewbox=0,0,36,36 style="
       transition: rotate .2s;
       width: ${sheepSize}vh;
       height: ${sheepSize}vh;
