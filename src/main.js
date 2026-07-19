@@ -1,9 +1,9 @@
 const grassHeight = 4;
-const horizontalRange = 24;
-const platformEndWidth = 4;
+const horizontalRange = 23; // Horizontal range of sheep movement & platform placement in svh
+const platformEndWidth = 4; // Width of the last platform in svh
 const platformHeight = 2; // Height of platforms in svh
-const platformSpacing = 40;
-const platformStartWidth = 14;
+const platformSpacing = 40; // Vertical distance between platforms in svh
+const platformStartWidth = 14; // Width of the first platform in svh
 const sheepSize = 10;
 
 // id="s" instead of 'parent.children[0]' is good to avoid square brackets entirely
