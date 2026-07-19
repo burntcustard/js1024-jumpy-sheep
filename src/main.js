@@ -45,7 +45,7 @@ let heldKeys = {'R': 0, 'L': 0};
 let tiltX = 0;
 const gravity = .09;
 const jumpVelocity = 3;
-const tiltDeadzoneAngle = 8;
+const tiltDeadzone = 1;
 const tiltResponseRange = 2;
 const cameraDeadzoneTop = 60;
 const cameraDeadzoneBottom = 8;
@@ -110,17 +110,16 @@ const update = () => {
 onkeydown = e => heldKeys[e.key[5]] = 1;
 onkeyup = e => heldKeys[e.key[5]] = 0;
 
-ondeviceorientation = e => {
-  // e.gamma is the left/right device tilt in degrees. Normalise by the deadzone
-  // angle (tiltDeadzoneAngle), then apply a soft deadzone: subtract the clamped
-  // value, then clamp the result into [-1, 1].
+ondevicemotion = e => {
+  // Use only gravity-adjusted X acceleration for left/right movement.
+  // Soft deadzone: subtract the clamped value (deadzone) then clamp the result.
   tiltX = Math.max(
     -1,
     Math.min(
       1,
       (
-        e.gamma / tiltDeadzoneAngle
-        - Math.max(-1, Math.min(1, e.gamma / tiltDeadzoneAngle))
+        -e.accelerationIncludingGravity.x
+        - Math.max(-1, Math.min(1, -e.accelerationIncludingGravity.x))
       ) / tiltResponseRange
     )
   );
