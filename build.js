@@ -67,18 +67,6 @@ js = js
   )
   // createElement('div') -> createElement`div`
   .replace(/createElement\('([^']+)'\)/g, 'createElement`$1`')
-  // Shorten tubeIndex to a to avoid reassignment by terser.
-  // RegPack also doesn't reassign 'a','b','c' by default.
-//   .replaceAll('tubeObject', 'a')
-  // 'b' is reserved for the document body
-//   .replaceAll('tubeIndex', 'c')
-  // Resting disabling renaming eye variables for now
-  // .replaceAll('eyeElement', 'd')
-  // .replaceAll('eyeIndex', 'e')
-  // Replace timerELement with 'd' *as well* (doesn't help?)
-  // .replaceAll('timerElement', 'd')
-  // Replace tubeElement with 'd' *as well* (doesn't help?)
-  // .replaceAll('tubeElement', 'd')
   // Replace const with let declaration
   .replaceAll('const ', 'let ')
   // Replace all .forEach with .map because they're the same but shorter in this codebase
@@ -99,7 +87,7 @@ const code = minifiedJs.code
   // .replaceAll('{d.remove()}', 'd.remove()')
   // .replaceAll('t=>{t?.remove()}', 't=>t?.remove()')
 
-  // Replace '()=>' with 'z=>'. Doesn't make a difference
+  // Replace '()=>' with 't=>' 
   .replaceAll('()=>', 't=>')
 
   // Replace all double quotes with backticks for consistency
