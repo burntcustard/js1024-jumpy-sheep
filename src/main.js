@@ -93,7 +93,7 @@ const update = () => {
   s.style = `
     transition: rotate .2s;
     width: ${sheepSize}svh;
-    rotate: ${15 * moveX * sheepFacing}deg;
+    rotate: ${.3 * moveX * sheepFacing}rad;
   `;
 
   // Render body: base layout, camera translate (two values for
