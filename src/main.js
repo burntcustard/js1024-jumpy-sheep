@@ -1,10 +1,10 @@
-const platformHeight = 2; // Height of platforms in svh
 const platformStartWidth = 14;
 const platformEndWidth = 4;
 const horizontalRange = 24;
 const platformSpacing = 40;
 const sheepSize = 10;
 const grassHeight = 4;
+const platformHeight = 2;
 // id="s" instead of 'parent.children[0]' is good to avoid square brackets entirely
 // The wrapper div handles position + movement transform so the sheep's own
 // transform-origin stays correct for the rotate on the svg
@@ -33,8 +33,7 @@ const platforms = [...Array(99)].map((_,i) => (
       left: 50%;
       bottom: ${y}svh;
       width: ${width}svh;
-      height: ${platformHeight}svh;
-      background: #c82;
+      border-bottom: solid #c82 ${platformHeight}svh;
       translate: ${x - width / 2}svh 0;
     ">
   `,
@@ -101,7 +100,7 @@ const update = () => {
   a.style = `
     margin: 0;
     height: ${100 - grassHeight}svh;
-    border-bottom: ${grassHeight}svh solid #3a3;
+    border-bottom: solid #3a3 ${grassHeight}svh;
     translate: 0 ${cameraY}svh;
     background: hsl(${190 + cameraY / 44} 60% ${73 - cameraY / 62}%);
   `;
