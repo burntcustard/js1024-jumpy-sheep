@@ -103,7 +103,7 @@ const update = () => {
     height: ${100 - grassHeight}svh;
     border-bottom: ${grassHeight}svh solid #3a3;
     translate: 0 ${cameraY}svh;
-    background: hsl(${190 + cameraY / 44} 65% ${73 - cameraY / 70}%);
+    background: hsl(${190 + cameraY / 44} 60% ${73 - cameraY / 62}%);
   `;
 };
 
