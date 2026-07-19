@@ -18,7 +18,8 @@ const sheepHtml = `
   </i>
 `;
 
-// Platform tuple: [x, hitX, top] where hitX = width/2 + sheep radius
+// Platform object: platformHitX = width/2 + sheep radius, platformTop = the
+// y coord of the platform's top edge (used for landing collision)
 let width, x, y, platformsHtml = '';
 const platforms = [...Array(99)].map((_,i) => (
   width = platformStartWidth - (platformStartWidth - platformEndWidth) * i / 98,
@@ -35,7 +36,7 @@ const platforms = [...Array(99)].map((_,i) => (
       translate: ${x - width / 2}svh 0;
     "></i>
   `,
-  [x, width / 2 + 2, y + platformHeight]
+  ({platformX: x, platformHitX: width / 2 + 2, platformTop: y + platformHeight})
 ));
 
 let sheepX = 0;
@@ -66,9 +67,8 @@ const update = () => {
 
   // Bounce the sheep if its in a platform or the ground
   // Using bitwise OR to save a character but might not be worth it if more '||' added
-  // Tuple indexes: [0]=x, [1]=hitX, [2]=top
-  if (sheepY <= 0 | platforms.some(platform => Math.abs(sheepX - platform[0]) < platform[1]
-      & sheepY - sheepVY >= platform[2] & sheepY <= platform[2])) {
+  if (sheepY <= 0 | platforms.some(platform => Math.abs(sheepX - platform.platformX) < platform.platformHitX
+      & sheepY - sheepVY >= platform.platformTop & sheepY <= platform.platformTop)) {
     sheepVY = jumpVelocity;
   }
 
