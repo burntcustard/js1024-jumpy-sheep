@@ -44,7 +44,7 @@ const platforms = [...Array(99)].map(() => (
 
 let sheepX = 0;
 let sheepY = 0;
-// let heldKeys = {'R': 0, 'L': 0};
+let heldKeys = {'R': 0, 'L': 0};
 let tiltX = 0;
 const gravity = .09;
 const jumpVelocity = 3;
@@ -60,7 +60,7 @@ const update = (moveX) => {
   // heldKeys tracks each arrow separately via e.key[5], which is 'R' for
   // 'ArrowRight' and 'L' for 'ArrowLeft'. Holding both cancels out; releasing
   // one resumes movement in the other's direction
-  moveX = tiltX;
+  moveX = tiltX || heldKeys['R'] - heldKeys['L'];
   sheepFacing = moveX ? moveX > 0 ? -1 : 1 : sheepFacing;
   sheepX = Math.max(-horizontalRange, Math.min(horizontalRange, sheepX + moveX));
   sheepVY -= gravity;
@@ -106,9 +106,8 @@ const update = (moveX) => {
 
 // 'ArrowRight' and 'ArrowLeft' are the only keys that matter for this game,
 // so we can just use e.key[5] to get 'R' or 'L' and store it in heldKeys
-// onkeydown = e => heldKeys[e.key[5]] = 1;
-// onkeyup = e => heldKeys[e.key[5]] = 0;
-a.onclick = () => window.DeviceMotionEvent?.requestPermission?.();
+onkeydown = e => heldKeys[e.key[5]] = 1;
+onkeyup = e => heldKeys[e.key[5]] = 0;
 
 ondevicemotion = e => {
   // Use only gravity-adjusted X acceleration for left/right movement.
