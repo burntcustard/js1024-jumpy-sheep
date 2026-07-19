@@ -19,7 +19,10 @@ const sheepHtml = `
 
 // Platform object: platformHitX = width/2 + sheep radius, platformTop = the
 // y coord of the platform's top edge (used for landing collision)
-let width, x, y, platformsHtml = '';
+let width = 0;
+let x = 0;
+let y = 0;
+let platformsHtml = '';
 const platforms = [...Array(99)].map((_,i) => (
   width = platformStartWidth - (platformStartWidth - platformEndWidth) * i / 98,
   x = -horizontalRange + Math.random() * (horizontalRange * 2),
