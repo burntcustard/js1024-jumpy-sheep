@@ -9,13 +9,12 @@ const grassHeight = 4;
 // The wrapper div handles position + movement transform so the sheep's own
 // transform-origin stays correct for the rotate on the svg
 const sheepHtml = `
-  <i id=w>
+  <p id=w>
     <svg id=s viewbox=0,0,36,36>
       <path d=m18,33,8-1,2,4c2,1,4-5,5-7q3-2,3-8,0-11-27-14C5,8-1,13,0,18q1,6,8,5,0,5,3,7,2,6,4,6 fill=#eee />
       <path d=m6,16c0,2-3,2-3,0s3-2,3,0 />
       <path d=m7,9q2-5,11-5,6,2,4,9-5,6-10,4-3-2,1-2t5-3q-1-4-6-2-3,1-5-1 fill="#fc5" />
     </svg>
-  </i>
 `;
 
 // Platform object: platformHitX = width/2 + sheep radius, platformTop = the
@@ -26,7 +25,7 @@ const platforms = [...Array(99)].map((_,i) => (
   x = -horizontalRange + Math.random() * (horizontalRange * 2),
   y = (i + 1) * platformSpacing,
   platformsHtml += `
-    <i style="
+    <p style="
       position: absolute;
       left: 50%;
       bottom: ${y}svh;
@@ -34,7 +33,7 @@ const platforms = [...Array(99)].map((_,i) => (
       height: ${platformHeight}svh;
       background: #b72;
       translate: ${x - width / 2}svh 0;
-    "></i>
+    ">
   `,
   ({platformX: x, platformHitX: width / 2 + 2, platformTop: y + platformHeight})
 ));
