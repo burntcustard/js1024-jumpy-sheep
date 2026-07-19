@@ -70,10 +70,8 @@ const update = (moveX) => {
 
   // Bounce the sheep if its in a platform or the ground
   // Using bitwise OR to save a character but might not be worth it if more '||' added
-  if (sheepY < 0 | platforms.some(platform => Math.abs(sheepX - platform.platformX) < platform.platformHitX
-      & sheepY - sheepVY > platform.platformTop & sheepY < platform.platformTop)) {
-    sheepVY = jumpVelocity;
-  }
+  sheepVY = (sheepY < 0 | platforms.some(platform => Math.abs(sheepX - platform.platformX) < platform.platformHitX
+      & sheepY - sheepVY > platform.platformTop & sheepY < platform.platformTop)) ? jumpVelocity : sheepVY;
 
   cameraY = sheepY - Math.min(
     sheepY,
