@@ -62,9 +62,8 @@ const update = (moveX) => {
   // 'ArrowRight' and 'L' for 'ArrowLeft'. Holding both cancels out; releasing
   // one resumes movement in the other's direction
   moveX = tiltX || heldKeys['R'] - heldKeys['L'];
-  sheepX += moveX;
   sheepFacing = moveX ? moveX > 0 ? -1 : 1 : sheepFacing;
-  sheepX = Math.max(-horizontalRange, Math.min(horizontalRange, sheepX));
+  sheepX = Math.max(-horizontalRange, Math.min(horizontalRange, sheepX + moveX));
   sheepVY -= gravity;
   sheepY += sheepVY;
 
