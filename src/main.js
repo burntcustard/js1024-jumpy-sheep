@@ -1,10 +1,11 @@
-const platformHeight = 2; // Height of platforms in svh
-const platformStartWidth = 14;
-const platformEndWidth = 4;
-const horizontalRange = 24;
-const platformSpacing = 40;
-const sheepSize = 10;
 const grassHeight = 4;
+const horizontalRange = 24;
+const platformEndWidth = 4;
+const platformHeight = 2; // Height of platforms in svh
+const platformSpacing = 40;
+const platformStartWidth = 14;
+const sheepSize = 10;
+
 // id="s" instead of 'parent.children[0]' is good to avoid square brackets entirely
 // The wrapper div handles position + movement transform so the sheep's own
 // transform-origin stays correct for the rotate on the svg
