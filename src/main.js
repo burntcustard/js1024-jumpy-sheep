@@ -23,11 +23,12 @@ const sheepHtml = `
 let width = 0;
 let x = 0;
 let y = 0;
+let i = 0;
 let platformsHtml = '';
-const platforms = [...Array(99)].map((_,i) => (
+const platforms = [...Array(99)].map(() => (
   width = platformStartWidth - (platformStartWidth - platformEndWidth) * i / 98,
   x = -horizontalRange + Math.random() * (horizontalRange * 2),
-  y = (i + 1) * platformSpacing,
+  y = ++i * platformSpacing, // Here is where i is incremented
   platformsHtml += `
     <p style="
       position: absolute;
