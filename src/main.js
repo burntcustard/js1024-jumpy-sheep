@@ -48,7 +48,7 @@ let heldKeys = {'R': 0, 'L': 0};
 let tiltX = 0;
 const gravity = .09;
 const jumpVelocity = 3;
-const tiltDeadzone = 1;
+const tiltDeadzone = .5;
 const cameraDeadzoneTop = 60;
 const cameraDeadzoneBottom = 8;
 let sheepVY = jumpVelocity;
@@ -118,7 +118,7 @@ ondevicemotion = e => {
       1,
       (
         -e.accelerationIncludingGravity.x
-        - Math.max(-1, Math.min(1, -e.accelerationIncludingGravity.x))
+        - Math.max(-tiltDeadzone, Math.min(tiltDeadzone, -e.accelerationIncludingGravity.x))
       )
     )
   );
