@@ -99,8 +99,8 @@ const code = minifiedJs.code
   // .replaceAll('{d.remove()}', 'd.remove()')
   // .replaceAll('t=>{t?.remove()}', 't=>t?.remove()')
 
-  // Replace '=()=>' with '=v=>'. Doesn't make a difference
-  // .replaceAll('=()=>', '=v=>')
+  // Replace '()=>' with 'z=>'. Doesn't make a difference
+  .replaceAll('()=>', 't=>')
 
   // Replace all double quotes with backticks for consistency
 //   .replaceAll('"', '`')

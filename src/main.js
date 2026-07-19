@@ -56,12 +56,12 @@ let sheepVY = jumpVelocity;
 let cameraY = 0;
 let sheepFacing = 1;
 
-const update = () => {
+const update = (moveX) => {
   // Set sheep position
   // heldKeys tracks each arrow separately via e.key[5], which is 'R' for
   // 'ArrowRight' and 'L' for 'ArrowLeft'. Holding both cancels out; releasing
   // one resumes movement in the other's direction
-  const moveX = tiltX || heldKeys['R'] - heldKeys['L'];
+  moveX = tiltX || heldKeys['R'] - heldKeys['L'];
   sheepX += moveX;
   moveX && (sheepFacing = moveX > 0 ? -1 : 1);
   sheepX = Math.max(-horizontalRange, Math.min(horizontalRange, sheepX));
