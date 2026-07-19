@@ -49,7 +49,6 @@ let tiltX = 0;
 const gravity = .09;
 const jumpVelocity = 3;
 const tiltDeadzone = 1;
-const tiltResponseRange = 1;
 const cameraDeadzoneTop = 60;
 const cameraDeadzoneBottom = 8;
 let sheepVY = jumpVelocity;
@@ -120,7 +119,7 @@ ondevicemotion = e => {
       (
         -e.accelerationIncludingGravity.x
         - Math.max(-1, Math.min(1, -e.accelerationIncludingGravity.x))
-      ) / tiltResponseRange
+      )
     )
   );
 };
