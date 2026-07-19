@@ -63,7 +63,7 @@ const update = (moveX) => {
   // one resumes movement in the other's direction
   moveX = tiltX || heldKeys['R'] - heldKeys['L'];
   sheepX += moveX;
-  moveX && (sheepFacing = moveX > 0 ? -1 : 1);
+  sheepFacing = moveX ? moveX > 0 ? -1 : 1 : sheepFacing;
   sheepX = Math.max(-horizontalRange, Math.min(horizontalRange, sheepX));
   sheepVY -= gravity;
   sheepY += sheepVY;
